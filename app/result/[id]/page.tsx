@@ -841,7 +841,7 @@ function ContactSection() {
       <motion.div variants={fadeUp}>
         <SectionTitle
           title="了解我们？"
-          subtitle="扫码添加，获取更多学习资源和活动信息"
+          subtitle="扫码添加，获取更多学习产品和活动信息"
           centered
           className="mb-8"
         />
