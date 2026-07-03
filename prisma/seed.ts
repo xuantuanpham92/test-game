@@ -377,7 +377,16 @@ async function main() {
   for (const p of personalities) {
     await prisma.personalityType.upsert({
       where: { typeKey: p.typeKey },
-      update: {},
+      update: {
+        name: p.name,
+        dimensionKey: p.dimensionKey,
+        slogan: p.slogan,
+        shortDescription: p.shortDescription,
+        longDescription: p.longDescription,
+        typicalBehaviors: p.typicalBehaviors,
+        advice: p.advice,
+        themeColor: p.themeColor,
+      },
       create: p,
     });
   }
