@@ -25,7 +25,7 @@ interface ScoringResult {
   dimensionScores: DimensionScores;
   primaryType: string;
   secondaryType: string;
-  hiddenRiskType: string;
+  hiddenRiskType: string | null;
   strengthDimension: string;
 }
 
@@ -87,12 +87,29 @@ export function calculateScores(
     (a, b) => a[1] - b[1]
   );
 
+  const descending = (Object.entries(scores) as [DimensionKey, number][]).sort(
+    (a, b) => b[1] - a[1]
+  );
+
   const primaryDimension = sorted[0][0];
   const secondaryDimension = sorted[1][0];
   const hiddenRiskDimension = sorted[2][0];
-  const strengthDimension = (Object.entries(scores) as [DimensionKey, number][]).sort(
-    (a, b) => b[1] - a[1]
-  )[0][0];
+  const strengthDimension = descending[0][0];
+
+  // 全能均衡型检测: 所有维度 >= 85 分
+  const allAboveThreshold = (Object.values(scores) as number[]).every(
+    (v) => v >= 85
+  );
+
+  if (allAboveThreshold) {
+    return {
+      dimensionScores: scores,
+      primaryType: "perfect",
+      secondaryType: PERSONALITY_BY_DIMENSION[sorted[0][0]], // 相对最低的维度
+      hiddenRiskType: null, // 无明显风险
+      strengthDimension,
+    };
+  }
 
   return {
     dimensionScores: scores,

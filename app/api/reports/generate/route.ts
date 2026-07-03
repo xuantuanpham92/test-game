@@ -76,9 +76,11 @@ export async function POST(request: Request) {
     const secondaryPersonality = await prisma.personalityType.findUnique({
       where: { typeKey: scoringResult.secondaryType },
     });
-    const hiddenRiskPersonality = await prisma.personalityType.findUnique({
-      where: { typeKey: scoringResult.hiddenRiskType },
-    });
+    const hiddenRiskPersonality = scoringResult.hiddenRiskType
+      ? await prisma.personalityType.findUnique({
+          where: { typeKey: scoringResult.hiddenRiskType },
+        })
+      : null;
 
     if (!primaryPersonality) {
       return NextResponse.json(

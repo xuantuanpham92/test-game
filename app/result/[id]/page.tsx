@@ -65,6 +65,7 @@ const PERSONALITY_EMOJIS: Record<string, string> = {
   expression_offline: "\u{1F4DD}", // 📝
   final_boss_lost: "\u{1F3D4}️", // 🏔️
   time_blackhole: "⏰", // ⏰
+  perfect: "\u{1F48E}", // 💎
 };
 
 const RADAR_LABELS: Record<DimensionKey, string> = {

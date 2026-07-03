@@ -31,6 +31,19 @@ export function generateSummaryText(
   const primaryName = primaryPersonality.name;
   const secondaryName = secondaryPersonality?.name || "";
 
+  // Perfect type gets a special summary
+  if (primaryPersonality.typeKey === "perfect") {
+    let text = `恭喜！你的测评结果显示，你在八项核心学习能力上均达到了优秀水平，被归类为"全能均衡型"。`;
+    text += `\n\n这意味着从审题到计算、从迁移到复盘、从表达到时间管理，你的学习链条在每一个关键环节都运转良好。`;
+    text += `你没有明显的能力短板——这在同龄学生中是非常少见的。`;
+    text += `\n\n但全能均衡型也有自己的课题：当所有维度都不错时，如何找到突破的方向？`;
+    text += `我们建议你选择最有热情的一个维度进行纵深突破——把一个80分的能力推到95分，这种单点突破会带动其他维度一起提升。`;
+    if (secondaryName) {
+      text += `\n\n在八项能力中，你的"${secondaryName}"维度相对排名最低，但这并不代表它是弱点——只是在你的均衡体系中，它暂时是最后一个。如果你需要一个明确的发力点，可以从这里开始。`;
+    }
+    return text;
+  }
+
   const lowDimensions = (Object.entries(scores) as [DimensionKey, number][])
     .filter(([, v]) => v < 60)
     .map(([k]) => DIMENSIONS[k])
