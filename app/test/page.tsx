@@ -50,17 +50,99 @@ const slideVariants = {
 /*  Sub-components                                                     */
 /* ------------------------------------------------------------------ */
 
-function QuestionTypeBadge({ type }: { type: string }) {
-  const labels: Record<string, string> = {
-    SINGLE_CHOICE: "单选",
-    MULTIPLE_CHOICE: "多选",
-    SCALE: "量表",
-    SCENARIO: "情景",
-  };
+const SCALE_LEVELS = [
+  { key: "1", label: "非常符合" },
+  { key: "2", label: "比较符合" },
+  { key: "3", label: "一般" },
+  { key: "4", label: "不太符合" },
+  { key: "5", label: "非常不符合" },
+];
+
+function ScaleSelector({
+  selectedKey,
+  onSelect,
+  disabled,
+}: {
+  selectedKey: string | null;
+  onSelect: (key: string) => void;
+  disabled: boolean;
+}) {
   return (
-    <span className="inline-flex rounded-full bg-primary-50 px-3 py-0.5 text-xs font-medium text-primary-600">
-      {labels[type] || type}
-    </span>
+    <div className="space-y-3">
+      {/* Horizontal scale — desktop */}
+      <div className="hidden sm:flex items-end justify-between gap-2">
+        {SCALE_LEVELS.map((level) => {
+          const isSelected = selectedKey === level.key;
+          return (
+            <button
+              key={level.key}
+              type="button"
+              onClick={() => onSelect(level.key)}
+              disabled={disabled}
+              className={`flex flex-col items-center gap-2 flex-1 rounded-2xl py-4 px-2 transition-all duration-200 cursor-pointer border-2 ${
+                isSelected
+                  ? "border-primary-500 bg-primary-50 shadow-md shadow-primary-500/10 scale-105"
+                  : "border-gray-200 bg-white hover:border-primary-300 hover:bg-primary-50/20"
+              } ${disabled ? "opacity-50 pointer-events-none" : ""}`}
+            >
+              <span
+                className={`w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold transition-colors ${
+                  isSelected
+                    ? "bg-primary-500 text-white shadow-md"
+                    : "bg-gray-100 text-gray-400"
+                }`}
+              >
+                {level.key}
+              </span>
+              <span
+                className={`text-xs font-medium transition-colors ${
+                  isSelected ? "text-primary-600" : "text-gray-500"
+                }`}
+              >
+                {level.label}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Vertical scale — mobile */}
+      <div className="sm:hidden space-y-2">
+        {SCALE_LEVELS.map((level) => {
+          const isSelected = selectedKey === level.key;
+          return (
+            <button
+              key={level.key}
+              type="button"
+              onClick={() => onSelect(level.key)}
+              disabled={disabled}
+              className={`w-full flex items-center gap-4 rounded-xl py-3 px-4 transition-all duration-200 cursor-pointer border-2 ${
+                isSelected
+                  ? "border-primary-500 bg-primary-50 shadow-md shadow-primary-500/10"
+                  : "border-gray-200 bg-white hover:border-primary-300 hover:bg-primary-50/20"
+              } ${disabled ? "opacity-50 pointer-events-none" : ""}`}
+            >
+              <span
+                className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-base font-bold transition-colors ${
+                  isSelected
+                    ? "bg-primary-500 text-white"
+                    : "bg-gray-100 text-gray-400"
+                }`}
+              >
+                {level.key}
+              </span>
+              <span
+                className={`text-sm font-medium transition-colors ${
+                  isSelected ? "text-primary-600" : "text-gray-600"
+                }`}
+              >
+                {level.label}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
@@ -343,13 +425,10 @@ function TestPageContent() {
       <div className="flex-1 flex flex-col items-center px-4 sm:px-6 py-8">
         <div className="w-full max-w-2xl">
           {/* Question counter */}
-          <div className="flex items-center justify-between mb-6">
+          <div className="mb-6">
             <p className="text-sm font-semibold text-primary-500">
               第 {currentIndex + 1} / {totalQuestions} 题
             </p>
-            {currentQuestion && (
-              <QuestionTypeBadge type={currentQuestion.type} />
-            )}
           </div>
 
           {/* Question card with slide animation */}
@@ -366,20 +445,20 @@ function TestPageContent() {
               >
                 {currentQuestion && (
                   <Card padding="lg" className="shadow-md border-primary-100">
-                    {/* Title */}
+                    {/* Title — 场景陈述 */}
                     <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-3 leading-snug">
                       {currentQuestion.title}
                     </h2>
 
                     {/* Description */}
                     {currentQuestion.description && (
-                      <p className="text-sm text-gray-500 mb-6">
+                      <p className="text-sm text-gray-500 mb-5">
                         {currentQuestion.description}
                       </p>
                     )}
 
                     {/* Hint */}
-                    <p className="text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2 mb-5 inline-flex items-center gap-1.5">
+                    <p className="text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2 mb-6 inline-flex items-center gap-1.5">
                       <svg
                         className="w-4 h-4 shrink-0"
                         fill="none"
@@ -393,49 +472,15 @@ function TestPageContent() {
                           d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                         />
                       </svg>
-                      不用选&ldquo;正确答案&rdquo;，选最像你的真实情况。
+                      请根据你的真实情况选择符合程度，不是选&ldquo;正确答案&rdquo;。
                     </p>
 
-                    {/* Options */}
-                    <div className="space-y-3">
-                      {currentQuestion.options.map((option) => {
-                        const isSelected =
-                          answers[currentQuestion.id] === option.key;
-                        return (
-                          <motion.button
-                            key={option.key}
-                            type="button"
-                            whileTap={{ scale: 0.98 }}
-                            onClick={() => handleSelectOption(option.key)}
-                            disabled={isSubmittingAnswer || isGeneratingReport}
-                            className={`w-full text-left rounded-xl border-2 p-4 transition-all duration-200 cursor-pointer ${
-                              isSelected
-                                ? "border-primary-500 bg-primary-50 shadow-md shadow-primary-500/10 scale-[1.01]"
-                                : "border-gray-200 bg-white hover:border-primary-300 hover:bg-primary-50/30"
-                            } ${
-                              isSubmittingAnswer || isGeneratingReport
-                                ? "opacity-60 pointer-events-none"
-                                : ""
-                            }`}
-                          >
-                            <div className="flex items-start gap-3">
-                              <span
-                                className={`flex-shrink-0 flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold transition-colors ${
-                                  isSelected
-                                    ? "bg-primary-500 text-white"
-                                    : "bg-gray-100 text-gray-500"
-                                }`}
-                              >
-                                {option.key}
-                              </span>
-                              <span className="text-sm sm:text-base text-gray-800 leading-relaxed pt-0.5">
-                                {option.text}
-                              </span>
-                            </div>
-                          </motion.button>
-                        );
-                      })}
-                    </div>
+                    {/* 5-level scale selector */}
+                    <ScaleSelector
+                      selectedKey={answers[currentQuestion.id] ?? null}
+                      onSelect={handleSelectOption}
+                      disabled={isSubmittingAnswer || isGeneratingReport}
+                    />
                   </Card>
                 )}
               </motion.div>
