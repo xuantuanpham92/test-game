@@ -800,6 +800,88 @@ function TrainingAdviceSection({ report }: { report: ReportData }) {
 }
 
 /** Bottom CTA */
+/** Slogan banner */
+function SloganBanner() {
+  return (
+    <motion.section
+      className="max-w-5xl mx-auto px-4 py-12"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-80px" }}
+      variants={stagger}
+    >
+      <motion.div variants={fadeUp}>
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary-600 via-accent-500 to-pink-500 px-8 py-10 text-center shadow-xl">
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-white blur-3xl" />
+            <div className="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-white blur-3xl" />
+          </div>
+          <p className="relative z-10 text-white/80 text-sm font-medium tracking-widest uppercase mb-2">
+            FUYAO EDUCATION
+          </p>
+          <h2 className="relative z-10 text-2xl md:text-3xl font-extrabold text-white">
+            扶摇——让学习变得简单
+          </h2>
+        </div>
+      </motion.div>
+    </motion.section>
+  );
+}
+
+/** Contact / QR code section */
+function ContactSection() {
+  return (
+    <motion.section
+      className="max-w-5xl mx-auto px-4 py-8"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-80px" }}
+      variants={stagger}
+    >
+      <motion.div variants={fadeUp}>
+        <SectionTitle
+          title="了解我们？"
+          subtitle="扫码添加，获取更多学习资源和活动信息"
+          centered
+          className="mb-8"
+        />
+      </motion.div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-md mx-auto">
+        {/* WeChat placeholder */}
+        <motion.div variants={fadeUp} custom={0}>
+          <Card padding="lg" className="text-center">
+            <div className="w-40 h-40 mx-auto mb-4 rounded-xl bg-gray-100 border-2 border-dashed border-gray-300 flex flex-col items-center justify-center text-gray-400 transition-colors hover:border-primary-300 hover:bg-primary-50/30">
+              <svg className="w-10 h-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+              </svg>
+              <span className="text-xs font-medium">微信二维码</span>
+              <span className="text-[10px] mt-0.5">即将上线</span>
+            </div>
+            <h4 className="font-bold text-gray-900 text-sm">扶摇小助手</h4>
+            <p className="text-xs text-gray-500 mt-1">微信号将在此展示</p>
+          </Card>
+        </motion.div>
+
+        {/* QQ placeholder */}
+        <motion.div variants={fadeUp} custom={1}>
+          <Card padding="lg" className="text-center">
+            <div className="w-40 h-40 mx-auto mb-4 rounded-xl bg-gray-100 border-2 border-dashed border-gray-300 flex flex-col items-center justify-center text-gray-400 transition-colors hover:border-primary-300 hover:bg-primary-50/30">
+              <svg className="w-10 h-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+              </svg>
+              <span className="text-xs font-medium">QQ 二维码</span>
+              <span className="text-[10px] mt-0.5">即将上线</span>
+            </div>
+            <h4 className="font-bold text-gray-900 text-sm">扶摇学习群</h4>
+            <p className="text-xs text-gray-500 mt-1">QQ 群号将在此展示</p>
+          </Card>
+        </motion.div>
+      </div>
+    </motion.section>
+  );
+}
+
 function BottomCTA({ reportId }: { reportId: string }) {
   const router = useRouter();
 
@@ -980,6 +1062,8 @@ export default function ResultPage() {
       <StrengthRiskSection report={data} />
       <SevenDayPlanSection report={data} />
       <TrainingAdviceSection report={data} />
+      <SloganBanner />
+      <ContactSection />
       <BottomCTA reportId={reportId} />
     </div>
   );
