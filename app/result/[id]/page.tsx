@@ -1063,6 +1063,23 @@ export default function ResultPage() {
       <SevenDayPlanSection report={data} />
       <TrainingAdviceSection report={data} />
       <SloganBanner />
+
+      {/* About us intro */}
+      <motion.section
+        className="max-w-5xl mx-auto px-4 py-4 text-center"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={stagger}
+      >
+        <motion.p
+          variants={fadeUp}
+          className="text-gray-500 text-sm leading-relaxed max-w-md mx-auto"
+        >
+          我们是扶摇团队，专注于做出对学生真正有帮助的产品。
+        </motion.p>
+      </motion.section>
+
       <ContactSection />
       <BottomCTA reportId={reportId} />
     </div>
