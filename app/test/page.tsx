@@ -260,6 +260,9 @@ function TestPageContent() {
     }
   }, [sessionId, router]);
 
+  /* ---- Check if all questions are answered ---- */
+  const allAnswered = answeredCount >= totalQuestions;
+
   /* ---- Select an option (single choice) — auto-advance to next question ---- */
   async function handleSelectOption(optionKey: string) {
     if (!currentQuestion || isSubmittingAnswer || isGeneratingReport) return;
@@ -275,8 +278,8 @@ function TestPageContent() {
     await new Promise((r) => setTimeout(r, 400));
 
     if (currentIndex >= totalQuestions - 1) {
-      // Last question — generate report
-      await generateReport();
+      // Last question — don't auto-submit, user must click "完成测试"
+      setSubmitError(null);
     } else {
       setCurrentIndex([currentIndex + 1, 1]);
       setSubmitError(null);
@@ -289,13 +292,24 @@ function TestPageContent() {
 
     const currentAnswer = answers[currentQuestion.id];
 
+    // Must answer current question before proceeding
+    if (!currentAnswer) {
+      setSubmitError("请先回答本题再继续");
+      return;
+    }
+
     // Save answer if not yet saved
-    if (currentAnswer && !savedAnswers.has(currentQuestion.id)) {
+    if (!savedAnswers.has(currentQuestion.id)) {
       const ok = await saveAnswer(currentQuestion.id, currentAnswer);
       if (!ok) return;
     }
 
     if (currentIndex >= totalQuestions - 1) {
+      // On last question — check if all answered before submitting
+      if (!allAnswered) {
+        setSubmitError(`还有 ${totalQuestions - answeredCount} 道题未作答，请完成全部题目后提交`);
+        return;
+      }
       await generateReport();
     } else {
       setCurrentIndex([currentIndex + 1, 1]);
@@ -524,12 +538,20 @@ function TestPageContent() {
             <Button
               onClick={handleNext}
               isLoading={isGeneratingReport}
-              disabled={isSubmittingAnswer}
+              disabled={
+                isSubmittingAnswer ||
+                (currentIndex >= totalQuestions - 1 && !allAnswered)
+              }
+              title={
+                currentIndex >= totalQuestions - 1 && !allAnswered
+                  ? `还有 ${totalQuestions - answeredCount} 题未作答`
+                  : ""
+              }
             >
               {isGeneratingReport
                 ? "正在生成报告..."
                 : currentIndex >= totalQuestions - 1
-                ? "完成测试 · 查看结果"
+                ? `完成测试 · 查看结果${!allAnswered ? ` (${totalQuestions - answeredCount}题未答)` : ""}`
                 : "下一题"}
               {!isGeneratingReport && currentIndex < totalQuestions - 1 && (
                 <svg

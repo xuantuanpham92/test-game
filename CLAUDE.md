@@ -15,6 +15,13 @@
 
 ## 数据库
 
-- 数据库是 Neon PostgreSQL，本地和线上共用
-- `npx prisma db seed` 会清空用户数据，执行前需确认
-- `npx prisma db push` 会改表结构，执行前需确认
+```
+线上 Vercel   →  DATABASE_URL (Vercel 环境变量)  →  neondb      (生产)
+本地 dev 分支  →  DATABASE_URL (.env 文件)         →  neondb_dev  (测试)
+```
+
+- 两个数据库完全隔离，互不影响
+- `.env` 指向 `neondb_dev`，仅在本地生效
+- Vercel 环境变量指向 `neondb`，仅线上生效
+- `npx prisma db seed` 现在只影响 dev 数据库，线上不受影响
+- `npx prisma db push` 也只影响 dev 数据库
