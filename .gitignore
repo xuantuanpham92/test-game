@@ -1,0 +1,19 @@
+# 依赖
+node_modules/
+.next/
+
+# 环境变量（含密码，不要提交）
+.env
+.env.local
+
+# Prisma
+prisma/dev.db
+prisma/dev.db-journal
+
+# IDE
+.vscode/
+.idea/
+
+# 系统
+.DS_Store
+Thumbs.db
