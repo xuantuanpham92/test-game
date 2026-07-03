@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, Suspense } from "react";
+import { useState, useEffect, useCallback, useRef, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -166,9 +166,15 @@ function TestPageContent() {
   /* ---- Answers state: questionId -> selected key(s) ---- */
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [savedAnswers, setSavedAnswers] = useState<Set<string>>(new Set());
+  const [failedSaves, setFailedSaves] = useState<Set<string>>(new Set());
+
+  /* ---- Abort controller for cancelling in-flight save requests ---- */
+  const saveAbortRef = useRef<AbortController | null>(null);
+
+  /* ---- Brief lock after jumping to prevent accidental clicks ---- */
+  const [jumpLock, setJumpLock] = useState(false);
 
   /* ---- Submitting state ---- */
-  const [isSubmittingAnswer, setIsSubmittingAnswer] = useState(false);
   const [isGeneratingReport, setIsGeneratingReport] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -207,30 +213,33 @@ function TestPageContent() {
     loadQuestions();
   }, [sessionId]);
 
-  /* ---- Save answer to server ---- */
+  /* ---- Save answer to server (fire-and-forget except for last question) ---- */
   const saveAnswer = useCallback(
-    async (questionId: string, selectedOption: string) => {
-      if (!sessionId) return;
-      setIsSubmittingAnswer(true);
-      setSubmitError(null);
+    async (questionId: string, selectedOption: string, signal?: AbortSignal) => {
+      if (!sessionId) return false;
       try {
         const res = await fetch("/api/answers", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ sessionId, questionId, selectedOption }),
+          signal,
         });
         const json = await res.json();
         if (!json.success) {
-          setSubmitError(json.error || "保存答案失败");
+          setFailedSaves((prev) => new Set(prev).add(questionId));
           return false;
         }
         setSavedAnswers((prev) => new Set(prev).add(questionId));
+        setFailedSaves((prev) => {
+          const next = new Set(prev);
+          next.delete(questionId);
+          return next;
+        });
         return true;
-      } catch {
-        setSubmitError("网络错误，保存答案失败");
+      } catch (e: any) {
+        if (e?.name === "AbortError") return false;
+        setFailedSaves((prev) => new Set(prev).add(questionId));
         return false;
-      } finally {
-        setIsSubmittingAnswer(false);
       }
     },
     [sessionId]
@@ -262,27 +271,50 @@ function TestPageContent() {
 
   /* ---- Check if all questions are answered ---- */
   const allAnswered = answeredCount >= totalQuestions;
+  const hasFailedSaves = failedSaves.size > 0;
 
-  /* ---- Select an option (single choice) — auto-advance to next question ---- */
+  /* ---- Retry failed saves ---- */
+  async function retryFailedSaves() {
+    const toRetry = [...failedSaves];
+    for (const qId of toRetry) {
+      const answer = answers[qId];
+      if (answer) await saveAnswer(qId, answer);
+    }
+  }
+
+  /* ---- Select an option — optimistic: jump immediately, save in background ---- */
   async function handleSelectOption(optionKey: string) {
-    if (!currentQuestion || isSubmittingAnswer || isGeneratingReport) return;
+    if (!currentQuestion || isGeneratingReport || jumpLock) return;
+
+    // Cancel previous in-flight save
+    saveAbortRef.current?.abort();
 
     // Update local state immediately
     setAnswers((prev) => ({ ...prev, [currentQuestion.id]: optionKey }));
 
-    // Save to server
-    const ok = await saveAnswer(currentQuestion.id, optionKey);
-    if (!ok) return;
+    const isLastQuestion = currentIndex >= totalQuestions - 1;
+    const qId = currentQuestion.id;
 
-    // Auto-advance after a short pause so the user can see their selection
-    await new Promise((r) => setTimeout(r, 400));
-
-    if (currentIndex >= totalQuestions - 1) {
-      // Last question — don't auto-submit, user must click "完成测试"
+    if (isLastQuestion) {
+      // Last question: synchronous save — must confirm before showing submit
+      const ok = await saveAnswer(qId, optionKey);
+      if (!ok) {
+        setSubmitError("答案保存失败，请重试");
+        return;
+      }
       setSubmitError(null);
     } else {
+      // Non-last: background save, jump immediately
+      const controller = new AbortController();
+      saveAbortRef.current = controller;
+      saveAnswer(qId, optionKey, controller.signal);
+
       setCurrentIndex([currentIndex + 1, 1]);
       setSubmitError(null);
+
+      // Brief lock to prevent accidental rapid clicks on next question
+      setJumpLock(true);
+      setTimeout(() => setJumpLock(false), 200);
     }
   }
 
@@ -298,16 +330,23 @@ function TestPageContent() {
       return;
     }
 
-    // Save answer if not yet saved
+    // Save answer if not yet saved (synchronous, user explicitly clicked "next")
     if (!savedAnswers.has(currentQuestion.id)) {
       const ok = await saveAnswer(currentQuestion.id, currentAnswer);
-      if (!ok) return;
+      if (!ok) {
+        setSubmitError("保存失败，请重试");
+        return;
+      }
     }
 
     if (currentIndex >= totalQuestions - 1) {
       // On last question — check if all answered before submitting
       if (!allAnswered) {
         setSubmitError(`还有 ${totalQuestions - answeredCount} 道题未作答，请完成全部题目后提交`);
+        return;
+      }
+      if (hasFailedSaves) {
+        setSubmitError("有答案尚未保存成功，请点击重试按钮");
         return;
       }
       await generateReport();
@@ -493,13 +532,32 @@ function TestPageContent() {
                     <ScaleSelector
                       selectedKey={answers[currentQuestion.id] ?? null}
                       onSelect={handleSelectOption}
-                      disabled={isSubmittingAnswer || isGeneratingReport}
+                      disabled={jumpLock || isGeneratingReport}
                     />
                   </Card>
                 )}
               </motion.div>
             </AnimatePresence>
           </div>
+
+          {/* Failed saves banner */}
+          {hasFailedSaves && (
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-4 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-sm text-amber-700 flex items-center justify-between"
+            >
+              <span>
+                ⚠️ {failedSaves.size} 道题的答案保存失败，网络恢复后点击重试
+              </span>
+              <button
+                onClick={retryFailedSaves}
+                className="ml-3 shrink-0 rounded-lg bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800 hover:bg-amber-200 transition-colors"
+              >
+                重试
+              </button>
+            </motion.div>
+          )}
 
           {/* Submit error */}
           {submitError && (
@@ -539,7 +597,8 @@ function TestPageContent() {
               onClick={handleNext}
               isLoading={isGeneratingReport}
               disabled={
-                isSubmittingAnswer ||
+                jumpLock ||
+                isGeneratingReport ||
                 (currentIndex >= totalQuestions - 1 && !allAnswered)
               }
               title={
