@@ -507,9 +507,21 @@ function RadarSection({ report }: { report: ReportData }) {
 
 /** Diagnosis summary */
 function DiagnosisSection({ report }: { report: ReportData }) {
-  const paragraphs = report.summaryText
+  const personality = report.primaryType;
+  const themeColor = personality?.themeColor || "#6366F1";
+
+  // Parse longDescription into sections by 【headers】
+  const longDesc = personality?.longDescription || "";
+  const sections = longDesc
+    .split(/【(.+?)】/)
+    .filter((s) => s.trim().length > 0);
+
+  // Parse summary text paragraphs
+  const summaryParagraphs = report.summaryText
     .split("\n\n")
     .filter((p) => p.trim().length > 0);
+
+  const behaviors: string[] = personality?.typicalBehaviors || [];
 
   return (
     <motion.section
@@ -523,22 +535,74 @@ function DiagnosisSection({ report }: { report: ReportData }) {
         <SectionTitle title="综合诊断分析" centered className="mb-8" />
       </motion.div>
 
-      <motion.div variants={fadeUp} custom={1}>
-        <Card padding="lg" className="bg-gradient-to-br from-white to-primary-50/30">
-          <div className="space-y-4">
-            {paragraphs.map((p, i) => (
-              <motion.p
-                key={i}
-                className="text-gray-700 leading-relaxed text-base"
-                variants={fadeUp}
-                custom={i}
-              >
-                {p}
-              </motion.p>
-            ))}
-          </div>
-        </Card>
-      </motion.div>
+      <div className="space-y-6">
+        {/* Summary intro */}
+        <motion.div variants={fadeUp} custom={1}>
+          <Card padding="lg" className="bg-gradient-to-br from-white to-primary-50/30">
+            <div className="space-y-3">
+              {summaryParagraphs.map((p, i) => (
+                <p key={i} className="text-gray-700 leading-relaxed text-base">
+                  {p}
+                </p>
+              ))}
+            </div>
+          </Card>
+        </motion.div>
+
+        {/* Detailed analysis from longDescription */}
+        {sections.length > 0 && (
+          <motion.div variants={fadeUp} custom={2}>
+            <Card padding="lg">
+              <div className="space-y-6">
+                {sections.map((section, i) => {
+                  // Odd indices after split are section headers
+                  const isHeader = i % 2 === 0 && i < sections.length - 1;
+                  if (isHeader) {
+                    return (
+                      <div key={i}>
+                        <h3
+                          className="text-lg font-bold mb-2"
+                          style={{ color: themeColor }}
+                        >
+                          【{section}】
+                        </h3>
+                        <p className="text-gray-700 leading-relaxed text-base whitespace-pre-line">
+                          {sections[i + 1]?.trim() || ""}
+                        </p>
+                      </div>
+                    );
+                  }
+                  return null;
+                }).filter(Boolean)}
+              </div>
+            </Card>
+          </motion.div>
+        )}
+
+        {/* Typical behaviors */}
+        {behaviors.length > 0 && (
+          <motion.div variants={fadeUp} custom={3}>
+            <Card padding="lg">
+              <h3 className="text-lg font-bold text-gray-900 mb-4">
+                典型行为表现
+              </h3>
+              <ul className="space-y-2">
+                {behaviors.map((b, i) => (
+                  <li key={i} className="flex items-start gap-3 text-gray-700">
+                    <span
+                      className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white mt-0.5"
+                      style={{ backgroundColor: themeColor }}
+                    >
+                      {i + 1}
+                    </span>
+                    <span className="text-sm leading-relaxed">{b}</span>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          </motion.div>
+        )}
+      </div>
     </motion.section>
   );
 }
