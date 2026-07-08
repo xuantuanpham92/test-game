@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { prisma, withDatabaseRetry } from "@/lib/prisma";
 import { createUserSchema } from "@/lib/validators";
 
 export async function POST(request: Request) {
@@ -16,18 +16,20 @@ export async function POST(request: Request) {
 
     const data = parsed.data;
 
-    const user = await prisma.user.create({
-      data: {
-        nickname: data.nickname || null,
-        phone: data.phone === "" ? null : data.phone || null,
-        wechat: data.wechat || null,
-        grade: data.grade,
-        weakSubject: data.weakSubject,
-        latestScoreRange: data.latestScoreRange || null,
-        targetScore: data.targetScore || null,
-        sourceChannel: data.sourceChannel || null,
-      },
-    });
+    const user = await withDatabaseRetry(() =>
+      prisma.user.create({
+        data: {
+          nickname: data.nickname || null,
+          phone: data.phone === "" ? null : data.phone || null,
+          wechat: data.wechat || null,
+          grade: data.grade,
+          weakSubject: data.weakSubject,
+          latestScoreRange: data.latestScoreRange || null,
+          targetScore: data.targetScore || null,
+          sourceChannel: data.sourceChannel || null,
+        },
+      })
+    );
 
     return NextResponse.json(
       { success: true, data: { userId: user.id } },

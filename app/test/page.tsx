@@ -50,98 +50,52 @@ const slideVariants = {
 /*  Sub-components                                                     */
 /* ------------------------------------------------------------------ */
 
-const SCALE_LEVELS = [
-  { key: "1", label: "非常符合" },
-  { key: "2", label: "比较符合" },
-  { key: "3", label: "一般" },
-  { key: "4", label: "不太符合" },
-  { key: "5", label: "非常不符合" },
-];
-
-function ScaleSelector({
+function OptionSelector({
+  options,
   selectedKey,
   onSelect,
   disabled,
 }: {
+  options: Option[];
   selectedKey: string | null;
   onSelect: (key: string) => void;
   disabled: boolean;
 }) {
   return (
     <div className="space-y-3">
-      {/* Horizontal scale — desktop */}
-      <div className="hidden sm:flex items-end justify-between gap-2">
-        {SCALE_LEVELS.map((level) => {
-          const isSelected = selectedKey === level.key;
-          return (
-            <button
-              key={level.key}
-              type="button"
-              onClick={() => onSelect(level.key)}
-              disabled={disabled}
-              className={`flex flex-col items-center gap-2 flex-1 rounded-2xl py-4 px-2 transition-all duration-200 cursor-pointer border-2 ${
+      {options.map((option) => {
+        const isSelected = selectedKey === option.key;
+        return (
+          <button
+            key={option.key}
+            type="button"
+            onClick={() => onSelect(option.key)}
+            disabled={disabled}
+            className={`w-full flex items-start gap-4 rounded-xl py-4 px-4 text-left transition-all duration-200 cursor-pointer border-2 ${
+              isSelected
+                ? "border-primary-500 bg-primary-50 shadow-md shadow-primary-500/10"
+                : "border-gray-200 bg-white hover:border-primary-300 hover:bg-primary-50/20"
+            } ${disabled ? "opacity-50 pointer-events-none" : ""}`}
+          >
+            <span
+              className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-base font-bold transition-colors ${
                 isSelected
-                  ? "border-primary-500 bg-primary-50 shadow-md shadow-primary-500/10 scale-105"
-                  : "border-gray-200 bg-white hover:border-primary-300 hover:bg-primary-50/20"
-              } ${disabled ? "opacity-50 pointer-events-none" : ""}`}
+                  ? "bg-primary-500 text-white"
+                  : "bg-gray-100 text-gray-500"
+              }`}
             >
-              <span
-                className={`w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold transition-colors ${
-                  isSelected
-                    ? "bg-primary-500 text-white shadow-md"
-                    : "bg-gray-100 text-gray-400"
-                }`}
-              >
-                {level.key}
-              </span>
-              <span
-                className={`text-xs font-medium transition-colors ${
-                  isSelected ? "text-primary-600" : "text-gray-500"
-                }`}
-              >
-                {level.label}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Vertical scale — mobile */}
-      <div className="sm:hidden space-y-2">
-        {SCALE_LEVELS.map((level) => {
-          const isSelected = selectedKey === level.key;
-          return (
-            <button
-              key={level.key}
-              type="button"
-              onClick={() => onSelect(level.key)}
-              disabled={disabled}
-              className={`w-full flex items-center gap-4 rounded-xl py-3 px-4 transition-all duration-200 cursor-pointer border-2 ${
-                isSelected
-                  ? "border-primary-500 bg-primary-50 shadow-md shadow-primary-500/10"
-                  : "border-gray-200 bg-white hover:border-primary-300 hover:bg-primary-50/20"
-              } ${disabled ? "opacity-50 pointer-events-none" : ""}`}
+              {option.key}
+            </span>
+            <span
+              className={`text-sm sm:text-base leading-relaxed pt-1 transition-colors ${
+                isSelected ? "text-primary-700 font-medium" : "text-gray-700"
+              }`}
             >
-              <span
-                className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-base font-bold transition-colors ${
-                  isSelected
-                    ? "bg-primary-500 text-white"
-                    : "bg-gray-100 text-gray-400"
-                }`}
-              >
-                {level.key}
-              </span>
-              <span
-                className={`text-sm font-medium transition-colors ${
-                  isSelected ? "text-primary-600" : "text-gray-600"
-                }`}
-              >
-                {level.label}
-              </span>
-            </button>
-          );
-        })}
-      </div>
+              {option.text}
+            </span>
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -525,11 +479,12 @@ function TestPageContent() {
                           d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                         />
                       </svg>
-                      请根据你的真实情况选择符合程度，不是选&ldquo;正确答案&rdquo;。
+                      不用选&ldquo;正确答案&rdquo;，选最像你的真实情况。
                     </p>
 
-                    {/* 5-level scale selector */}
-                    <ScaleSelector
+                    {/* Options */}
+                    <OptionSelector
+                      options={currentQuestion.options}
                       selectedKey={answers[currentQuestion.id] ?? null}
                       onSelect={handleSelectOption}
                       disabled={jumpLock || isGeneratingReport}

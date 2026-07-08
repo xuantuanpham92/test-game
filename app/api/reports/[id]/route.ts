@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getDisplayLongDescription } from "@/lib/personality-description-fallback";
 
 export async function GET(
   request: Request,
@@ -73,13 +74,17 @@ export async function GET(
         user: report.user,
         primaryType: primaryPersonality
           ? {
+              typeKey: primaryPersonality.typeKey,
               key: primaryPersonality.typeKey,
               name: primaryPersonality.name,
               slogan: primaryPersonality.slogan,
               illustrationUrl: primaryPersonality.illustrationUrl,
               themeColor: primaryPersonality.themeColor,
               shortDescription: primaryPersonality.shortDescription,
-              longDescription: primaryPersonality.longDescription,
+              longDescription: getDisplayLongDescription(
+                primaryPersonality.typeKey,
+                primaryPersonality.longDescription
+              ),
               typicalBehaviors: (() => {
                 try { return JSON.parse(primaryPersonality.typicalBehaviors); } catch { return []; }
               })(),

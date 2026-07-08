@@ -27,7 +27,7 @@ export default function RootLayout({
           <div className="flex min-h-screen flex-col">
             <main className="flex-1">{children}</main>
             <footer className="py-6 text-center text-sm text-gray-400">
-              © 2024 扶摇弱科人格画像
+              © 2026 扶摇弱科人格画像
             </footer>
           </div>
         </Providers>

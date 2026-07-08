@@ -567,7 +567,7 @@ export default function HomePage() {
             <div className="flex items-center gap-6">
               <span>扶摇 · 让每一次努力都算数</span>
             </div>
-            <span>© 2024 扶摇弱科人格画像</span>
+            <span>© 2026 扶摇弱科人格画像</span>
           </div>
         </PageContainer>
       </footer>

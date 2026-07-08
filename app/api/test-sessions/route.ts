@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { prisma, withDatabaseRetry } from "@/lib/prisma";
 import { createSessionSchema } from "@/lib/validators";
 
 export async function POST(request: Request) {
@@ -16,7 +16,9 @@ export async function POST(request: Request) {
 
     const { userId, sourceChannel } = parsed.data;
 
-    const user = await prisma.user.findUnique({ where: { id: userId } });
+    const user = await withDatabaseRetry(() =>
+      prisma.user.findUnique({ where: { id: userId } })
+    );
     if (!user) {
       return NextResponse.json(
         { success: false, error: "用户不存在" },
@@ -24,13 +26,15 @@ export async function POST(request: Request) {
       );
     }
 
-    const session = await prisma.testSession.create({
-      data: {
-        userId,
-        status: "STARTED",
-        sourceChannel: sourceChannel || null,
-      },
-    });
+    const session = await withDatabaseRetry(() =>
+      prisma.testSession.create({
+        data: {
+          userId,
+          status: "STARTED",
+          sourceChannel: sourceChannel || null,
+        },
+      })
+    );
 
     return NextResponse.json(
       { success: true, data: { sessionId: session.id } },

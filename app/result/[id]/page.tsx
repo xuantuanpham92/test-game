@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   RadarChart,
   PolarGrid,
@@ -19,6 +20,8 @@ import EmptyState from "@/components/common/EmptyState";
 import Badge from "@/components/common/Badge";
 import { useToast } from "@/components/common/Toast";
 import { DIMENSIONS, type DimensionKey } from "@/lib/constants";
+import { parseDescriptionSections } from "@/lib/description";
+import { getPersonalityCardLine } from "@/lib/personality-card-copy";
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -511,11 +514,7 @@ function DiagnosisSection({ report }: { report: ReportData }) {
   const personality = report.primaryType;
   const themeColor = personality?.themeColor || "#6366F1";
 
-  // Parse longDescription into sections by 【headers】
-  const longDesc = personality?.longDescription || "";
-  const sections = longDesc
-    .split(/【(.+?)】/)
-    .filter((s) => s.trim().length > 0);
+  const sections = parseDescriptionSections(personality?.longDescription || "");
 
   // Parse summary text paragraphs
   const summaryParagraphs = report.summaryText
@@ -555,26 +554,19 @@ function DiagnosisSection({ report }: { report: ReportData }) {
           <motion.div variants={fadeUp} custom={2}>
             <Card padding="lg">
               <div className="space-y-6">
-                {sections.map((section, i) => {
-                  // Odd indices after split are section headers
-                  const isHeader = i % 2 === 0 && i < sections.length - 1;
-                  if (isHeader) {
-                    return (
-                      <div key={i}>
-                        <h3
-                          className="text-lg font-bold mb-2"
-                          style={{ color: themeColor }}
-                        >
-                          【{section}】
-                        </h3>
-                        <p className="text-gray-700 leading-relaxed text-base whitespace-pre-line">
-                          {sections[i + 1]?.trim() || ""}
-                        </p>
-                      </div>
-                    );
-                  }
-                  return null;
-                }).filter(Boolean)}
+                {sections.map((section, i) => (
+                  <div key={`${section.title}-${i}`}>
+                    <h3
+                      className="text-lg font-bold mb-2"
+                      style={{ color: themeColor }}
+                    >
+                      【{section.title}】
+                    </h3>
+                    <p className="text-gray-700 leading-relaxed text-base whitespace-pre-line">
+                      {section.body}
+                    </p>
+                  </div>
+                ))}
               </div>
             </Card>
           </motion.div>
@@ -820,7 +812,7 @@ function SloganBanner() {
             FUYAO EDUCATION
           </p>
           <h2 className="relative z-10 text-2xl md:text-3xl font-extrabold text-white">
-            扶摇——让学习变得简单
+            扶摇——用科技助力教育，让学习变得简单
           </h2>
         </div>
       </motion.div>
@@ -841,40 +833,44 @@ function ContactSection() {
       <motion.div variants={fadeUp}>
         <SectionTitle
           title="了解我们？"
-          subtitle="扫码添加，获取更多学习产品和活动信息"
+          subtitle="扫码体验，获取更多学习产品和活动信息"
           centered
           className="mb-8"
         />
       </motion.div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-md mx-auto">
-        {/* WeChat placeholder */}
+        {/* WeChat QR code */}
         <motion.div variants={fadeUp} custom={0}>
           <Card padding="lg" className="text-center">
-            <div className="w-40 h-40 mx-auto mb-4 rounded-xl bg-gray-100 border-2 border-dashed border-gray-300 flex flex-col items-center justify-center text-gray-400 transition-colors hover:border-primary-300 hover:bg-primary-50/30">
-              <svg className="w-10 h-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-              </svg>
-              <span className="text-xs font-medium">微信二维码</span>
-              <span className="text-[10px] mt-0.5">即将上线</span>
+            <div className="w-44 h-64 mx-auto mb-4 rounded-lg bg-white border border-gray-100 overflow-hidden">
+              <Image
+                src="/contact/fuyao-wechat-assistant.jpg"
+                alt="扶摇微信小助手二维码"
+                width={840}
+                height={1178}
+                className="w-full h-full object-contain"
+              />
             </div>
-            <h4 className="font-bold text-gray-900 text-sm">扶摇小助手</h4>
+            <h4 className="font-bold text-gray-900 text-sm">扶摇微信小助手</h4>
             <p className="text-xs text-gray-500 mt-1">微信号将在此展示</p>
           </Card>
         </motion.div>
 
-        {/* QQ placeholder */}
+        {/* QQ QR code */}
         <motion.div variants={fadeUp} custom={1}>
           <Card padding="lg" className="text-center">
-            <div className="w-40 h-40 mx-auto mb-4 rounded-xl bg-gray-100 border-2 border-dashed border-gray-300 flex flex-col items-center justify-center text-gray-400 transition-colors hover:border-primary-300 hover:bg-primary-50/30">
-              <svg className="w-10 h-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-              </svg>
-              <span className="text-xs font-medium">QQ 二维码</span>
-              <span className="text-[10px] mt-0.5">即将上线</span>
+            <div className="w-44 h-64 mx-auto mb-4 rounded-lg bg-white border border-gray-100 overflow-hidden flex items-center justify-center">
+              <Image
+                src="/contact/fuyao-qq-assistant.jpg"
+                alt="扶摇QQ小助手二维码"
+                width={1044}
+                height={1839}
+                className="w-full h-full object-contain object-center"
+              />
             </div>
-            <h4 className="font-bold text-gray-900 text-sm">扶摇学习群</h4>
-            <p className="text-xs text-gray-500 mt-1">QQ 群号将在此展示</p>
+            <h4 className="font-bold text-gray-900 text-sm">扶摇QQ小助手</h4>
+            <p className="text-xs text-gray-500 mt-1">QQ 号将在此展示</p>
           </Card>
         </motion.div>
       </div>
@@ -882,70 +878,125 @@ function ContactSection() {
   );
 }
 
-function BottomCTA({ reportId }: { reportId: string }) {
-  const router = useRouter();
+function PersonalityCardSection({
+  report,
+}: {
+  report: ReportData;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const personality = report.primaryType;
+  const typeKey = personality?.typeKey || "";
+  const emoji = PERSONALITY_EMOJIS[typeKey] || "\u{1F9E0}";
+  const themeColor = personality?.themeColor || "#6366F1";
+  const cardLine = getPersonalityCardLine(typeKey, personality?.shortDescription);
 
   return (
-    <motion.section
-      className="max-w-5xl mx-auto px-4 py-16"
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-80px" }}
-      variants={stagger}
-    >
-      <motion.div variants={fadeUp}>
-        <Card
-          padding="lg"
-          className="text-center relative overflow-hidden"
-          hover
-        >
-          {/* Gradient overlay */}
-          <div
-            className="absolute inset-0 rounded-2xl opacity-10"
-            style={{
-              background:
-                "linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #EC4899 100%)",
-            }}
-          />
-
-          <div className="relative z-10 py-4">
-            <h3 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-3">
-              想获得完整的个性化学习计划？
-            </h3>
-            <p className="text-gray-500 mb-8 max-w-md mx-auto">
-              留下联系方式，我们会根据你的弱科人格画像生成更详细、更具操作性的专属提升方案。
-            </p>
-
-            <div className="flex gap-3 justify-center flex-wrap">
-              <Button
-                variant="primary"
-                size="lg"
-                onClick={() => router.push(`/claim?reportId=${reportId}`)}
+    <>
+      <motion.section
+        className="max-w-5xl mx-auto px-4 py-16"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-80px" }}
+        variants={stagger}
+      >
+        <motion.div variants={fadeUp}>
+          <button
+            type="button"
+            onClick={() => setIsOpen(true)}
+            className="group relative w-full overflow-hidden rounded-2xl bg-white p-8 text-center shadow-sm border border-gray-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-primary-100"
+          >
+            <div
+              className="absolute inset-0 opacity-10 transition-opacity group-hover:opacity-15"
+              style={{
+                background:
+                  "linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #EC4899 100%)",
+              }}
+            />
+            <div className="relative z-10 flex flex-col items-center gap-5 py-3">
+              <div
+                className="flex h-16 w-16 items-center justify-center rounded-2xl text-3xl shadow-lg"
+                style={{ backgroundColor: `${themeColor}18` }}
               >
-                领取完整学习计划
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={() => {
-                  if (navigator.share) {
-                    navigator.share({
-                      title: "扶摇弱科人格画像",
-                      text: "测测你的学习失分人格！",
-                      url: window.location.href,
-                    });
-                  } else {
-                    navigator.clipboard.writeText(window.location.href);
-                  }
+                {emoji}
+              </div>
+              <h3 className="text-2xl md:text-3xl font-extrabold text-gray-900">
+                查看我的人格卡片
+              </h3>
+              <span className="inline-flex items-center justify-center rounded-xl bg-primary-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-primary-500/20 transition-transform group-hover:scale-[1.03]">
+                打开卡片
+              </span>
+            </div>
+          </button>
+        </motion.div>
+      </motion.section>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-gray-950/55 px-4 py-6 backdrop-blur-md"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsOpen(false)}
+          >
+            <motion.div
+              className="w-full max-w-sm"
+              initial={{ opacity: 0, y: 48, scale: 0.94 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 32, scale: 0.96 }}
+              transition={{ type: "spring", stiffness: 260, damping: 24 }}
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div
+                className="relative overflow-hidden rounded-[28px] bg-white p-8 shadow-2xl"
+                style={{
+                  background: `linear-gradient(160deg, #ffffff 0%, ${themeColor}10 58%, #fdf2f8 100%)`,
                 }}
               >
-                分享给朋友
-              </Button>
-            </div>
-          </div>
-        </Card>
-      </motion.div>
-    </motion.section>
+                <div className="relative z-10 flex min-h-[480px] flex-col items-center justify-between text-center">
+                  <div className="w-full">
+                    <div
+                      className="mx-auto mb-7 flex h-24 w-24 items-center justify-center rounded-[28px] text-6xl shadow-lg"
+                      style={{ backgroundColor: `${themeColor}18` }}
+                    >
+                      {emoji}
+                    </div>
+                    <h2 className="text-3xl font-extrabold text-gray-950">
+                      {personality?.name || "我的弱科人格"}
+                    </h2>
+                    <div
+                      className="mx-auto my-7 h-1 w-14 rounded-full"
+                      style={{ backgroundColor: themeColor }}
+                    />
+                    <p className="text-base leading-8 text-gray-600">
+                      {cardLine}
+                    </p>
+                  </div>
+
+                  <div className="w-full border-t border-gray-200 pt-5">
+                    <p className="text-lg font-extrabold text-gray-950">扶摇</p>
+                    <p className="mt-1 text-[11px] font-semibold tracking-[0.24em] text-gray-400">
+                      FUYAO EDUCATION
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-5">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => setIsOpen(false)}
+                  className="w-full bg-white"
+                >
+                  关闭
+                </Button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
@@ -1076,12 +1127,23 @@ export default function ResultPage() {
           variants={fadeUp}
           className="text-gray-500 text-sm leading-relaxed max-w-md mx-auto"
         >
-          我们是扶摇团队，专注于做出对学生真正有帮助的产品。
+          我们是扶摇初创团队，专注于做出对学生真正有帮助的产品。
+        </motion.p>
+        <motion.p
+          variants={fadeUp}
+          className="mt-3 text-gray-500 text-sm leading-relaxed max-w-md mx-auto"
+        >
+          <span className="inline-flex items-center rounded-md bg-amber-100 px-1.5 py-0.5 font-extrabold text-amber-700 ring-1 ring-amber-200">
+            自研 AI 错题本工具
+          </span>
+          即将上线--助力暑期高效学习。
+          <br />
+          （基于全球首款扶摇AI记忆系统，现开放少量免费体验名额）
         </motion.p>
       </motion.section>
 
       <ContactSection />
-      <BottomCTA reportId={reportId} />
+      <PersonalityCardSection report={data} />
     </div>
   );
 }

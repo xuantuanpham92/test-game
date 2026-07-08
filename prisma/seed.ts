@@ -392,56 +392,448 @@ async function main() {
   }
   console.log("9 personality types created (含全能均衡型)");
 
-  // 3. Create 24 questions (场景陈述 + 5级符合度量表)
-  const SCALE_OPTIONS = JSON.stringify([
-    { key: "1", text: "非常符合" },
-    { key: "2", text: "比较符合" },
-    { key: "3", text: "一般" },
-    { key: "4", text: "不太符合" },
-    { key: "5", text: "非常不符合" },
-  ]);
-
-  // 评分: level 1(非常符合)扣12, 2(比较符合)扣6, 3(一般)不变, 4(不太符合)+5, 5(非常不符合)+8
-  function dimScore(d: string) {
-    return { "1": { [d]: -12 }, "2": { [d]: -6 }, "3": { [d]: 0 }, "4": { [d]: 5 }, "5": { [d]: 8 } };
-  }
-  function dualScore(d1: string, d2: string) {
-    return { "1": { [d1]: -10, [d2]: -10 }, "2": { [d1]: -5, [d2]: -5 }, "3": { [d1]: 0, [d2]: 0 }, "4": { [d1]: 4, [d2]: 4 }, "5": { [d1]: 7, [d2]: 7 } };
-  }
-
+  // 3. Create 24 questions
   const questions = [
-    // ========== 条件识别力 ==========
-    { type: "SCALE", title: "做综合题时，我不会先整理题目条件，而是直接开始计算。", description: "", options: SCALE_OPTIONS, dimensionMapping: JSON.stringify(dimScore("condition")), orderIndex: 1 },
-    { type: "SCALE", title: "我经常漏掉题目中的关键限制条件，比如 x>0、a≠0、整数等。", description: "", options: SCALE_OPTIONS, dimensionMapping: JSON.stringify(dimScore("condition")), orderIndex: 2 },
-    { type: "SCALE", title: "题目中出现「至少」「不超过」「最小值」这类词时，我经常忽略它们或不知道该怎么处理。", description: "", options: SCALE_OPTIONS, dimensionMapping: JSON.stringify(dimScore("condition")), orderIndex: 3 },
-    // ========== 公式唤醒力 ==========
-    { type: "SCALE", title: "看到题目时，我经常想不起来应该用哪个公式或知识点。", description: "", options: SCALE_OPTIONS, dimensionMapping: JSON.stringify(dimScore("formula")), orderIndex: 4 },
-    { type: "SCALE", title: "需要老师或同学提示一下公式，我才能把题做出来。", description: "", options: SCALE_OPTIONS, dimensionMapping: JSON.stringify(dimScore("formula")), orderIndex: 5 },
-    { type: "SCALE", title: "我不能快速判断出一道题考察的是哪个知识点，需要反复读题才能确定。", description: "", options: SCALE_OPTIONS, dimensionMapping: JSON.stringify(dimScore("formula")), orderIndex: 6 },
-    // ========== 题型迁移力 ==========
-    { type: "SCALE", title: "老师讲过的题，换个问法或换个背景，我就认不出来了。", description: "", options: SCALE_OPTIONS, dimensionMapping: JSON.stringify(dimScore("transfer")), orderIndex: 7 },
-    { type: "SCALE", title: "举一反三对我来说很难，我需要做大量同类题才能掌握。", description: "", options: SCALE_OPTIONS, dimensionMapping: JSON.stringify(dimScore("transfer")), orderIndex: 8 },
-    { type: "SCALE", title: "考试中遇到一道看似陌生的题，我会感到慌张，不知道怎么下手。", description: "", options: SCALE_OPTIONS, dimensionMapping: JSON.stringify(dualScore("transfer", "complex")), orderIndex: 9 },
-    // ========== 计算稳定性 ==========
-    { type: "SCALE", title: "考试后我经常懊恼地发现：思路是对的，但中间算错了。", description: "", options: SCALE_OPTIONS, dimensionMapping: JSON.stringify(dimScore("calculation")), orderIndex: 10 },
-    { type: "SCALE", title: "我的草稿纸很乱，写完后自己都找不到计算过程在哪。", description: "", options: SCALE_OPTIONS, dimensionMapping: JSON.stringify(dualScore("calculation", "expression")), orderIndex: 11 },
-    { type: "SCALE", title: "我经常犯符号错误，比如正负号写反、大于小于号搞混。", description: "", options: SCALE_OPTIONS, dimensionMapping: JSON.stringify(dimScore("calculation")), orderIndex: 12 },
-    // ========== 复盘转化力 ==========
-    { type: "SCALE", title: "错题订正之后，下次遇到同类题我还是会犯同样的错误。", description: "", options: SCALE_OPTIONS, dimensionMapping: JSON.stringify(dimScore("review")), orderIndex: 13 },
-    { type: "SCALE", title: "我有错题本，但基本不翻看，订正完就觉得完事了。", description: "", options: SCALE_OPTIONS, dimensionMapping: JSON.stringify(dimScore("review")), orderIndex: 14 },
-    { type: "SCALE", title: "我订正错题时只是把正确答案抄一遍，不会去分析自己为什么错。", description: "", options: SCALE_OPTIONS, dimensionMapping: JSON.stringify(dualScore("review", "transfer")), orderIndex: 15 },
-    // ========== 表达规范性 ==========
-    { type: "SCALE", title: "我会做的题，经常因为解题步骤写不完整被扣分。", description: "", options: SCALE_OPTIONS, dimensionMapping: JSON.stringify(dimScore("expression")), orderIndex: 16 },
-    { type: "SCALE", title: "做解答题时，我习惯跳步书写，只写关键算式，很少写推导过程。", description: "", options: SCALE_OPTIONS, dimensionMapping: JSON.stringify(dimScore("expression")), orderIndex: 17 },
-    { type: "SCALE", title: "对照标准答案时，我发现自己的解题过程经常缺少关键步骤。", description: "", options: SCALE_OPTIONS, dimensionMapping: JSON.stringify(dualScore("expression", "review")), orderIndex: 18 },
-    // ========== 压轴拆解力 ==========
-    { type: "SCALE", title: "面对综合大题的最后几问，我经常不知道从哪里下手。", description: "", options: SCALE_OPTIONS, dimensionMapping: JSON.stringify(dimScore("complex")), orderIndex: 19 },
-    { type: "SCALE", title: "压轴题我只能做出第(1)小题，后面的就基本放弃了。", description: "", options: SCALE_OPTIONS, dimensionMapping: JSON.stringify(dimScore("complex")), orderIndex: 20 },
-    { type: "SCALE", title: "需要多步推理的复杂题目，我容易在中途迷失方向，忘了下一步该做什么。", description: "", options: SCALE_OPTIONS, dimensionMapping: JSON.stringify(dualScore("complex", "condition")), orderIndex: 21 },
-    // ========== 时间控制力 ==========
-    { type: "SCALE", title: "考试时我经常时间不够用，后面明明会做的题也来不及写。", description: "", options: SCALE_OPTIONS, dimensionMapping: JSON.stringify(dimScore("time")), orderIndex: 22 },
-    { type: "SCALE", title: "遇到有点难但又不是完全不会的题，我容易死磕超过10分钟。", description: "", options: SCALE_OPTIONS, dimensionMapping: JSON.stringify(dimScore("time")), orderIndex: 23 },
-    { type: "SCALE", title: "考试时我没有时间分配策略，做到哪算哪，经常出现时间失控。", description: "", options: SCALE_OPTIONS, dimensionMapping: JSON.stringify(dualScore("time", "complex")), orderIndex: 24 },
+    // ===== 条件识别力 (3 questions) =====
+    {
+      type: "SCENARIO",
+      title: "做综合题时，你通常第一步会做什么？",
+      description: "选择最符合你真实情况的选项。",
+      options: JSON.stringify([
+        { key: "A", text: "直接开始计算，边做边看条件" },
+        { key: "B", text: "先圈出题目里的范围、单位、限制词" },
+        { key: "C", text: "先看自己会不会套公式" },
+        { key: "D", text: "不太固定，看题目难不难" },
+      ]),
+      dimensionMapping: JSON.stringify({
+        A: { condition: -10 },
+        B: { condition: 8 },
+        C: { formula: -3, condition: -4 },
+        D: { condition: -5 },
+      }),
+      orderIndex: 1,
+    },
+    {
+      type: "SINGLE_CHOICE",
+      title: "你是否经常漏掉题目中的 x>0、a≠0、整数 等限制条件？",
+      description: "回顾你最近的考试和作业情况。",
+      options: JSON.stringify([
+        { key: "A", text: "经常漏，导致整道题做错" },
+        { key: "B", text: "偶尔会漏，但一般后面能发现" },
+        { key: "C", text: "很少漏，我会刻意关注这些条件" },
+        { key: "D", text: "基本不错这类问题" },
+      ]),
+      dimensionMapping: JSON.stringify({
+        A: { condition: -12 },
+        B: { condition: -6 },
+        C: { condition: 5 },
+        D: { condition: 8 },
+      }),
+      orderIndex: 2,
+    },
+    {
+      type: "SCENARIO",
+      title: "题目中出现「至少」「不超过」「最小值」这类词时，你的第一反应是？",
+      description: "选择最接近你真实反应的选项。",
+      options: JSON.stringify([
+        { key: "A", text: "直接忽略，先算再说" },
+        { key: "B", text: "圈出来，作为最后检查的依据" },
+        { key: "C", text: "先换算成数学表达式（不等式、区间等）" },
+        { key: "D", text: "注意到了但经常忘记在答案中体现" },
+      ]),
+      dimensionMapping: JSON.stringify({
+        A: { condition: -10 },
+        B: { condition: 5 },
+        C: { condition: 8 },
+        D: { condition: -5, expression: -3 },
+      }),
+      orderIndex: 3,
+    },
+    // ===== 公式唤醒力 (3 questions) =====
+    {
+      type: "SINGLE_CHOICE",
+      title: "你是否经常出现「看答案觉得会，但自己做时想不起用哪个公式」的情况？",
+      description: "选择最符合你真实情况的选项。",
+      options: JSON.stringify([
+        { key: "A", text: "经常" },
+        { key: "B", text: "偶尔" },
+        { key: "C", text: "很少" },
+        { key: "D", text: "几乎没有" },
+      ]),
+      dimensionMapping: JSON.stringify({
+        A: { formula: -12 },
+        B: { formula: -6 },
+        C: { formula: 4 },
+        D: { formula: 8 },
+      }),
+      orderIndex: 4,
+    },
+    {
+      type: "SCENARIO",
+      title: "看到一道题时，你能多快判断出它考察的是哪个知识点？",
+      description: "以你最有把握的学科为例。",
+      options: JSON.stringify([
+        { key: "A", text: "几乎能立刻判断" },
+        { key: "B", text: "需要先读两遍题才能确定" },
+        { key: "C", text: "经常判断错，或者不确定" },
+        { key: "D", text: "得先看看答案才能确认" },
+      ]),
+      dimensionMapping: JSON.stringify({
+        A: { formula: 8 },
+        B: { formula: -3 },
+        C: { formula: -10, transfer: -5 },
+        D: { formula: -12 },
+      }),
+      orderIndex: 5,
+    },
+    {
+      type: "SINGLE_CHOICE",
+      title: "老师提示用某个公式后，你能立刻把题做出来吗？",
+      description: "回想你被点拨后的反应。",
+      options: JSON.stringify([
+        { key: "A", text: "能，而且会觉得刚才怎么没想到" },
+        { key: "B", text: "大部分时候能" },
+        { key: "C", text: "有时能，有时还是不会用" },
+        { key: "D", text: "就算知道了公式也不太会用" },
+      ]),
+      dimensionMapping: JSON.stringify({
+        A: { formula: -8 },
+        B: { formula: -4 },
+        C: { formula: 3 },
+        D: { formula: 8, transfer: -5 },
+      }),
+      orderIndex: 6,
+    },
+    // ===== 题型迁移力 (3 questions) =====
+    {
+      type: "SCENARIO",
+      title: "老师讲过一道题后，换一个问法或换一个背景，你通常会怎样？",
+      description: "选择最接近你真实情况的选项。",
+      options: JSON.stringify([
+        { key: "A", text: "还能认出是同一类题" },
+        { key: "B", text: "需要想很久才能反应过来" },
+        { key: "C", text: "经常感觉像一道新题" },
+        { key: "D", text: "只要数字变了我就容易卡住" },
+      ]),
+      dimensionMapping: JSON.stringify({
+        A: { transfer: 8 },
+        B: { transfer: -5 },
+        C: { transfer: -12 },
+        D: { transfer: -8 },
+      }),
+      orderIndex: 7,
+    },
+    {
+      type: "SINGLE_CHOICE",
+      title: "你觉得举一反三对你来说容易吗？",
+      description: "以数学或物理为例。",
+      options: JSON.stringify([
+        { key: "A", text: "比较容易，我擅长找规律" },
+        { key: "B", text: "一般，需要多练几道同类题才行" },
+        { key: "C", text: "比较难，需要老师带着做变式" },
+        { key: "D", text: "很难，我基本只能做原题" },
+      ]),
+      dimensionMapping: JSON.stringify({
+        A: { transfer: 8 },
+        B: { transfer: -3 },
+        C: { transfer: -8 },
+        D: { transfer: -12 },
+      }),
+      orderIndex: 8,
+    },
+    {
+      type: "SCENARIO",
+      title: "考试中遇到一道看似陌生的题，你最常怎么做？",
+      description: "选择最接近你真实反应的选项。",
+      options: JSON.stringify([
+        { key: "A", text: "冷静分析，尝试匹配熟悉的题型结构" },
+        { key: "B", text: "先跳过，做后面的题" },
+        { key: "C", text: "有点慌，尝试用最可能的方法硬做" },
+        { key: "D", text: "直接放弃或随便写几步" },
+      ]),
+      dimensionMapping: JSON.stringify({
+        A: { transfer: 8, condition: 3 },
+        B: { transfer: -3, time: 5 },
+        C: { transfer: -8, formula: -3 },
+        D: { transfer: -12, complex: -5 },
+      }),
+      orderIndex: 9,
+    },
+    // ===== 计算稳定性 (3 questions) =====
+    {
+      type: "SINGLE_CHOICE",
+      title: "考试后你是否经常发现：思路是对的，但中间算错了？",
+      description: "选择最符合你真实情况的选项。",
+      options: JSON.stringify([
+        { key: "A", text: "经常，非常影响分数" },
+        { key: "B", text: "偶尔会有" },
+        { key: "C", text: "很少" },
+        { key: "D", text: "基本不会" },
+      ]),
+      dimensionMapping: JSON.stringify({
+        A: { calculation: -12 },
+        B: { calculation: -5 },
+        C: { calculation: 4 },
+        D: { calculation: 8 },
+      }),
+      orderIndex: 10,
+    },
+    {
+      type: "SCENARIO",
+      title: "你在草稿纸上的计算过程是怎样的？",
+      description: "选择最接近你实际情况的选项。",
+      options: JSON.stringify([
+        { key: "A", text: "很乱，自己有时都找不到" },
+        { key: "B", text: "大体有序，但偶尔会很乱" },
+        { key: "C", text: "比较整齐，每步都写清楚" },
+        { key: "D", text: "非常整洁，像答题过程一样" },
+      ]),
+      dimensionMapping: JSON.stringify({
+        A: { calculation: -10, expression: -5 },
+        B: { calculation: -3 },
+        C: { calculation: 6 },
+        D: { calculation: 8, time: -3 },
+      }),
+      orderIndex: 11,
+    },
+    {
+      type: "SINGLE_CHOICE",
+      title: "你是否经常犯符号错误（正负号、大于小于号等）？",
+      description: "",
+      options: JSON.stringify([
+        { key: "A", text: "经常，是最让我头疼的问题之一" },
+        { key: "B", text: "偶尔会犯" },
+        { key: "C", text: "很少，我会特别注意" },
+        { key: "D", text: "基本不会" },
+      ]),
+      dimensionMapping: JSON.stringify({
+        A: { calculation: -10 },
+        B: { calculation: -4 },
+        C: { calculation: 5 },
+        D: { calculation: 8 },
+      }),
+      orderIndex: 12,
+    },
+    // ===== 复盘转化力 (3 questions) =====
+    {
+      type: "SINGLE_CHOICE",
+      title: "你做完错题订正后，同类题还会再错吗？",
+      description: "",
+      options: JSON.stringify([
+        { key: "A", text: "经常再错，感觉订正没用" },
+        { key: "B", text: "有时再错" },
+        { key: "C", text: "很少再错" },
+        { key: "D", text: "基本不会，订正后就真会了" },
+      ]),
+      dimensionMapping: JSON.stringify({
+        A: { review: -12 },
+        B: { review: -6 },
+        C: { review: 5 },
+        D: { review: 8 },
+      }),
+      orderIndex: 13,
+    },
+    {
+      type: "SINGLE_CHOICE",
+      title: "你有错题本吗？如果有，你是怎么用的？",
+      description: "",
+      options: JSON.stringify([
+        { key: "A", text: "有，但基本不翻看" },
+        { key: "B", text: "有，考前会翻一遍" },
+        { key: "C", text: "有，会定期重做错题" },
+        { key: "D", text: "有，会分类整理并总结错因规律" },
+      ]),
+      dimensionMapping: JSON.stringify({
+        A: { review: -10 },
+        B: { review: -3 },
+        C: { review: 6 },
+        D: { review: 8, transfer: 3 },
+      }),
+      orderIndex: 14,
+    },
+    {
+      type: "SCENARIO",
+      title: "你订正错题时，通常怎么做？",
+      description: "选择最接近你实际情况的选项。",
+      options: JSON.stringify([
+        { key: "A", text: "抄一遍正确答案就完了" },
+        { key: "B", text: "看懂答案，写出正确过程" },
+        { key: "C", text: "重做一遍，确保自己能独立做对" },
+        { key: "D", text: "重做+标注错因+一周后再做一次" },
+      ]),
+      dimensionMapping: JSON.stringify({
+        A: { review: -12 },
+        B: { review: -5 },
+        C: { review: 5 },
+        D: { review: 8 },
+      }),
+      orderIndex: 15,
+    },
+    // ===== 表达规范性 (3 questions) =====
+    {
+      type: "SINGLE_CHOICE",
+      title: "你是否有会做但步骤分拿不满的情况？",
+      description: "",
+      options: JSON.stringify([
+        { key: "A", text: "经常，每次考试都有这类丢分" },
+        { key: "B", text: "偶尔会有" },
+        { key: "C", text: "很少，我知道怎么写过程" },
+        { key: "D", text: "基本不会" },
+      ]),
+      dimensionMapping: JSON.stringify({
+        A: { expression: -12 },
+        B: { expression: -5 },
+        C: { expression: 5 },
+        D: { expression: 8 },
+      }),
+      orderIndex: 16,
+    },
+    {
+      type: "SCENARIO",
+      title: "做一道大题时，你的书写过程通常是？",
+      description: "",
+      options: JSON.stringify([
+        { key: "A", text: "跳步较多，只写关键算式" },
+        { key: "B", text: "有过程但不规范，想到哪写到哪" },
+        { key: "C", text: "按步骤写，但偶尔遗漏中间过程" },
+        { key: "D", text: "完整规范，按条件-公式-代入-结论结构写" },
+      ]),
+      dimensionMapping: JSON.stringify({
+        A: { expression: -10 },
+        B: { expression: -6 },
+        C: { expression: 3 },
+        D: { expression: 8 },
+      }),
+      orderIndex: 17,
+    },
+    {
+      type: "SINGLE_CHOICE",
+      title: "对照标准答案时，你发现自己的过程差异主要在？",
+      description: "",
+      options: JSON.stringify([
+        { key: "A", text: "关键步骤缺失，逻辑链不完整" },
+        { key: "B", text: "表达方式不标准，但意思差不多" },
+        { key: "C", text: "偶尔漏写理由或推导过程" },
+        { key: "D", text: "差别不大，基本都写全了" },
+      ]),
+      dimensionMapping: JSON.stringify({
+        A: { expression: -10, review: -3 },
+        B: { expression: -6 },
+        C: { expression: 3 },
+        D: { expression: 8 },
+      }),
+      orderIndex: 18,
+    },
+    // ===== 压轴拆解力 (3 questions) =====
+    {
+      type: "SINGLE_CHOICE",
+      title: "看到一道综合大题（最后两题级别），你的第一反应是什么？",
+      description: "",
+      options: JSON.stringify([
+        { key: "A", text: "先读题，尝试拆成几个小问题" },
+        { key: "B", text: "能做多少算多少" },
+        { key: "C", text: "有点紧张，需要读好几遍" },
+        { key: "D", text: "看完觉得太难，先跳过" },
+      ]),
+      dimensionMapping: JSON.stringify({
+        A: { complex: 8 },
+        B: { complex: -3 },
+        C: { complex: -6, time: -3 },
+        D: { complex: -12, time: 5 },
+      }),
+      orderIndex: 19,
+    },
+    {
+      type: "SCENARIO",
+      title: "对于压轴题中的第(1)小题和第(3)小题，你的表现通常是？",
+      description: "",
+      options: JSON.stringify([
+        { key: "A", text: "第(1)小题会做，(2)(3)直接空着" },
+        { key: "B", text: "第(1)(2)能做，(3)看情况" },
+        { key: "C", text: "基本都能完成" },
+        { key: "D", text: "连第(1)小题都经常做不对" },
+      ]),
+      dimensionMapping: JSON.stringify({
+        A: { complex: -8 },
+        B: { complex: -3 },
+        C: { complex: 8 },
+        D: { complex: -12, condition: -5 },
+      }),
+      orderIndex: 20,
+    },
+    {
+      type: "SCENARIO",
+      title: "面对一道需要多步推理的复杂题，你通常会？",
+      description: "",
+      options: JSON.stringify([
+        { key: "A", text: "先画图或列条件，梳理清楚再开始" },
+        { key: "B", text: "直接开始做第一步，走一步看一步" },
+        { key: "C", text: "容易在中途迷失方向" },
+        { key: "D", text: "经常不知道第一步该做什么" },
+      ]),
+      dimensionMapping: JSON.stringify({
+        A: { complex: 8, condition: 3 },
+        B: { complex: -4 },
+        C: { complex: -8, time: -3 },
+        D: { complex: -12, formula: -3 },
+      }),
+      orderIndex: 21,
+    },
+    // ===== 时间控制力 (3 questions) =====
+    {
+      type: "SINGLE_CHOICE",
+      title: "考试时，你是否经常时间不够用？",
+      description: "",
+      options: JSON.stringify([
+        { key: "A", text: "几乎每次都这样" },
+        { key: "B", text: "经常这样" },
+        { key: "C", text: "偶尔会" },
+        { key: "D", text: "基本够用" },
+      ]),
+      dimensionMapping: JSON.stringify({
+        A: { time: -12 },
+        B: { time: -7 },
+        C: { time: 3 },
+        D: { time: 8 },
+      }),
+      orderIndex: 22,
+    },
+    {
+      type: "SCENARIO",
+      title: "遇到一道有点难但又不是完全不会的题，你通常会花多长时间？",
+      description: "",
+      options: JSON.stringify([
+        { key: "A", text: "很容易超过10分钟，不做好不罢休" },
+        { key: "B", text: "5-8分钟，还没思路就跳过" },
+        { key: "C", text: "3-5分钟，严格控制" },
+        { key: "D", text: "看心情，没有固定策略" },
+      ]),
+      dimensionMapping: JSON.stringify({
+        A: { time: -10 },
+        B: { time: 5 },
+        C: { time: 8 },
+        D: { time: -6 },
+      }),
+      orderIndex: 23,
+    },
+    {
+      type: "SINGLE_CHOICE",
+      title: "你有考试时间分配策略吗？（比如每个模块分配多少分钟）",
+      description: "",
+      options: JSON.stringify([
+        { key: "A", text: "有明确策略，考前就规划好" },
+        { key: "B", text: "大概有个感觉" },
+        { key: "C", text: "没有刻意规划" },
+        { key: "D", text: "考试时全凭感觉，经常失控" },
+      ]),
+      dimensionMapping: JSON.stringify({
+        A: { time: 8 },
+        B: { time: 3 },
+        C: { time: -5 },
+        D: { time: -12 },
+      }),
+      orderIndex: 24,
+    },
   ];
 
   // Clean existing questions before seeding to avoid duplicates
@@ -468,3 +860,4 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
+
