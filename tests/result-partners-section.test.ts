@@ -11,6 +11,9 @@ test("renders the partners section below the personality card", () => {
   assert.match(pageSource, /学习成长伙伴/);
   assert.match(pageSource, /技术共创伙伴/);
   assert.match(pageSource, /grid-cols-1 md:grid-cols-3/);
+  assert.match(pageSource, /bg-white\/\[0\.07\]/);
+  assert.match(pageSource, /backdrop-blur-xl/);
+  assert.match(pageSource, /hover:-translate-y-2/);
 
   const partnersPosition = pageSource.indexOf("<PartnersSection />");
   const contactPosition = pageSource.indexOf("<ContactSection />");

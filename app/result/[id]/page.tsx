@@ -865,11 +865,13 @@ function PartnersSection() {
                 key={partner.name}
                 variants={fadeUp}
                 custom={index + 2}
-                className="group relative overflow-hidden rounded-2xl border border-white/20 bg-white/10 p-5 text-left shadow-lg shadow-indigo-950/10 backdrop-blur-md transition-transform duration-300 hover:-translate-y-1"
+                className="group relative overflow-hidden rounded-2xl border border-white/25 bg-white/[0.07] p-5 text-left shadow-[0_18px_40px_rgba(12,9,56,0.28),inset_0_1px_0_rgba(255,255,255,0.24)] backdrop-blur-xl transform-gpu transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:border-white/40 hover:bg-white/[0.12] hover:shadow-[0_28px_50px_rgba(12,9,56,0.42),inset_0_1px_0_rgba(255,255,255,0.34)]"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/15 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="pointer-events-none absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent" />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/20 via-white/[0.04] to-transparent opacity-70 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="pointer-events-none absolute -bottom-10 -right-8 h-24 w-24 rounded-full bg-violet-200/15 blur-2xl transition-transform duration-500 group-hover:scale-150" />
                 <div className="relative flex items-center gap-4">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/30 bg-white/15 text-white shadow-inner shadow-white/10">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/35 bg-white/10 text-white shadow-[0_8px_18px_rgba(10,8,53,0.25),inset_0_1px_0_rgba(255,255,255,0.28)]">
                     {partner.icon === "spark" && (
                       <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-6 w-6">
                         <path d="M12 2l1.9 6.1L20 10l-6.1 1.9L12 18l-1.9-6.1L4 10l6.1-1.9L12 2z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
