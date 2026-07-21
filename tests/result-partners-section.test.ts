@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-test("renders the partners section between the team copy and contact section", () => {
+test("renders the partners section below the personality card", () => {
   const pageSource = readFileSync("app/result/[id]/page.tsx", "utf8");
 
   assert.match(pageSource, /function PartnersSection\(/);
@@ -14,6 +14,13 @@ test("renders the partners section between the team copy and contact section", (
 
   const partnersPosition = pageSource.indexOf("<PartnersSection />");
   const contactPosition = pageSource.indexOf("<ContactSection />");
+  const personalityCardPosition = pageSource.indexOf(
+    "<PersonalityCardSection report={data} />"
+  );
   assert.ok(partnersPosition > -1, "partners section should be mounted");
-  assert.ok(partnersPosition < contactPosition, "partners section should precede contact section");
+  assert.ok(contactPosition < partnersPosition, "contact section should precede partners section");
+  assert.ok(
+    personalityCardPosition < partnersPosition,
+    "personality card should precede partners section"
+  );
 });

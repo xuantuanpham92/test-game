@@ -1229,9 +1229,9 @@ export default function ResultPage() {
         </motion.p>
       </motion.section>
 
-      <PartnersSection />
       <ContactSection />
       <PersonalityCardSection report={data} />
+      <PartnersSection />
     </div>
   );
 }
