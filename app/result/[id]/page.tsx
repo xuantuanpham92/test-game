@@ -820,6 +820,93 @@ function SloganBanner() {
   );
 }
 
+/** Partners showcase section */
+function PartnersSection() {
+  const partners = [
+    { name: "教育创新伙伴", label: "EDUCATION INNOVATION", icon: "spark" },
+    { name: "学习成长伙伴", label: "LEARNING & GROWTH", icon: "orbit" },
+    { name: "技术共创伙伴", label: "TECHNOLOGY CO-CREATION", icon: "grid" },
+  ] as const;
+
+  return (
+    <motion.section
+      className="max-w-5xl mx-auto px-4 py-10"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-80px" }}
+      variants={stagger}
+    >
+      <motion.div
+        variants={fadeUp}
+        className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#17134a] via-[#30246d] to-[#6b2d72] px-5 py-10 shadow-2xl shadow-indigo-950/20 sm:px-10"
+      >
+        <div className="pointer-events-none absolute -left-24 top-1/2 h-64 w-64 -translate-y-1/2 rounded-full bg-violet-400/30 blur-3xl" />
+        <div className="pointer-events-none absolute -right-16 -top-20 h-72 w-72 rounded-full bg-pink-400/20 blur-3xl" />
+        <div className="pointer-events-none absolute inset-0 opacity-30 [background-image:radial-gradient(circle_at_1px_1px,rgba(255,255,255,.65)_1px,transparent_0)] [background-size:24px_24px]" />
+        <div className="pointer-events-none absolute -bottom-36 left-1/2 h-80 w-[42rem] -translate-x-1/2 rounded-[50%] border border-white/15" />
+        <div className="pointer-events-none absolute -bottom-28 left-1/2 h-64 w-[32rem] -translate-x-1/2 rounded-[50%] border border-white/10" />
+
+        <div className="relative z-10 text-center">
+          <motion.div variants={fadeUp} custom={1}>
+            <p className="text-xs font-bold tracking-[0.28em] text-violet-200">
+              PARTNERS
+            </p>
+            <h2 className="mt-3 text-2xl font-extrabold text-white md:text-3xl">
+              与优秀伙伴，共赴成长
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-indigo-100/80">
+              连接教育、学习与技术的创新力量，为每一位学生创造更好的成长体验。
+            </p>
+          </motion.div>
+
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+            {partners.map((partner, index) => (
+              <motion.div
+                key={partner.name}
+                variants={fadeUp}
+                custom={index + 2}
+                className="group relative overflow-hidden rounded-2xl border border-white/20 bg-white/10 p-5 text-left shadow-lg shadow-indigo-950/10 backdrop-blur-md transition-transform duration-300 hover:-translate-y-1"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-white/15 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="relative flex items-center gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/30 bg-white/15 text-white shadow-inner shadow-white/10">
+                    {partner.icon === "spark" && (
+                      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-6 w-6">
+                        <path d="M12 2l1.9 6.1L20 10l-6.1 1.9L12 18l-1.9-6.1L4 10l6.1-1.9L12 2z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
+                      </svg>
+                    )}
+                    {partner.icon === "orbit" && (
+                      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-6 w-6">
+                        <circle cx="12" cy="12" r="2.5" fill="currentColor" />
+                        <ellipse cx="12" cy="12" rx="9" ry="4.5" stroke="currentColor" strokeWidth="1.5" transform="rotate(-30 12 12)" />
+                        <ellipse cx="12" cy="12" rx="9" ry="4.5" stroke="currentColor" strokeWidth="1.5" transform="rotate(30 12 12)" />
+                      </svg>
+                    )}
+                    {partner.icon === "grid" && (
+                      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-6 w-6">
+                        <rect x="4" y="4" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
+                        <rect x="14" y="4" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
+                        <rect x="4" y="14" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
+                        <path d="M15 17h5M17.5 14.5v5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                      </svg>
+                    )}
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-white">{partner.name}</p>
+                    <p className="mt-1 text-[10px] font-semibold tracking-[0.12em] text-indigo-100/65">
+                      {partner.label}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+    </motion.section>
+  );
+}
+
 /** Contact / QR code section */
 function ContactSection() {
   return (
@@ -1142,6 +1229,7 @@ export default function ResultPage() {
         </motion.p>
       </motion.section>
 
+      <PartnersSection />
       <ContactSection />
       <PersonalityCardSection report={data} />
     </div>
