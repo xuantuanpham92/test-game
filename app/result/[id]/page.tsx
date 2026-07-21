@@ -838,10 +838,13 @@ function PartnersSection() {
     >
       <motion.div
         variants={fadeUp}
-        className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#17134a] via-[#30246d] to-[#6b2d72] px-5 py-10 shadow-2xl shadow-indigo-950/20 sm:px-10"
+        className="relative overflow-hidden rounded-[28px] border border-white/15 bg-gradient-to-br from-[#17134a] via-[#30246d] to-[#6b2d72] px-5 py-10 shadow-[0_30px_80px_rgba(20,12,75,0.38)] sm:px-10"
       >
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/[0.18]" />
+        <div className="pointer-events-none absolute inset-x-10 top-0 h-20 rounded-b-full bg-violet-200/10 blur-2xl" />
         <div className="pointer-events-none absolute -left-24 top-1/2 h-64 w-64 -translate-y-1/2 rounded-full bg-violet-400/30 blur-3xl" />
         <div className="pointer-events-none absolute -right-16 -top-20 h-72 w-72 rounded-full bg-pink-400/20 blur-3xl" />
+        <div className="pointer-events-none absolute -right-10 bottom-8 h-32 w-32 rounded-full border border-white/20 bg-white/[0.04] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]" />
         <div className="pointer-events-none absolute inset-0 opacity-30 [background-image:radial-gradient(circle_at_1px_1px,rgba(255,255,255,.65)_1px,transparent_0)] [background-size:24px_24px]" />
         <div className="pointer-events-none absolute -bottom-36 left-1/2 h-80 w-[42rem] -translate-x-1/2 rounded-[50%] border border-white/15" />
         <div className="pointer-events-none absolute -bottom-28 left-1/2 h-64 w-[32rem] -translate-x-1/2 rounded-[50%] border border-white/10" />

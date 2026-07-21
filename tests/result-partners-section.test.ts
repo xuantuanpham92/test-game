@@ -14,6 +14,8 @@ test("renders the partners section below the personality card", () => {
   assert.match(pageSource, /bg-white\/\[0\.07\]/);
   assert.match(pageSource, /backdrop-blur-xl/);
   assert.match(pageSource, /hover:-translate-y-2/);
+  assert.match(pageSource, /shadow-\[0_30px_80px_rgba\(20,12,75,0\.38\)\]/);
+  assert.match(pageSource, /bg-white\/\[0\.18\]/);
 
   const partnersPosition = pageSource.indexOf("<PartnersSection />");
   const contactPosition = pageSource.indexOf("<ContactSection />");
