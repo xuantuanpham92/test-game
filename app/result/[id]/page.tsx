@@ -823,7 +823,7 @@ function SloganBanner() {
 /** Partners showcase section */
 function PartnersSection() {
   const partners = [
-    { name: "教育创新伙伴", label: "EDUCATION INNOVATION", icon: "spark" },
+    { name: "xx书店", label: "EDUCATION INNOVATION", icon: "spark" },
     { name: "学习成长伙伴", label: "LEARNING & GROWTH", icon: "orbit" },
     { name: "技术共创伙伴", label: "TECHNOLOGY CO-CREATION", icon: "grid" },
   ] as const;

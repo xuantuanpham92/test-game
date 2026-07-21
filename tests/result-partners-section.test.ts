@@ -7,7 +7,7 @@ test("renders the partners section below the personality card", () => {
 
   assert.match(pageSource, /function PartnersSection\(/);
   assert.match(pageSource, /与优秀伙伴，共赴成长/);
-  assert.match(pageSource, /教育创新伙伴/);
+  assert.match(pageSource, /xx书店/);
   assert.match(pageSource, /学习成长伙伴/);
   assert.match(pageSource, /技术共创伙伴/);
   assert.match(pageSource, /grid-cols-1 md:grid-cols-3/);
