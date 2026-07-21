@@ -1,7 +1,7 @@
 import { Config } from "@remotion/cli/config";
 import { enableTailwind } from "@remotion/tailwind-v4";
 
-const remotionEntryPoint = process.env.REMOTION_ENTRY_POINT || "./remotion/index.jsx";
+const remotionEntryPoint = process.env.REMOTION_ENTRY_POINT || "./remotion/index.tsx";
 const browserExecutable = process.env.REMOTION_BROWSER_EXECUTABLE;
 
 Config.setEntryPoint(remotionEntryPoint);

@@ -1,0 +1,57 @@
+{
+  "fps": 30.0,
+  "frames": 554,
+  "duration": 18.466666666666665,
+  "width": 720,
+  "height": 960,
+  "saved": [
+    {
+      "index": 0,
+      "time": 0,
+      "path": "D:/fuyao-ref-frames\\ref-00-0.00s.jpg",
+      "written": true
+    },
+    {
+      "index": 1,
+      "time": 2.22,
+      "path": "D:/fuyao-ref-frames\\ref-01-2.22s.jpg",
+      "written": true
+    },
+    {
+      "index": 2,
+      "time": 4.62,
+      "path": "D:/fuyao-ref-frames\\ref-02-4.62s.jpg",
+      "written": true
+    },
+    {
+      "index": 3,
+      "time": 7.02,
+      "path": "D:/fuyao-ref-frames\\ref-03-7.02s.jpg",
+      "written": true
+    },
+    {
+      "index": 4,
+      "time": 9.23,
+      "path": "D:/fuyao-ref-frames\\ref-04-9.23s.jpg",
+      "written": true
+    },
+    {
+      "index": 5,
+      "time": 11.63,
+      "path": "D:/fuyao-ref-frames\\ref-05-11.63s.jpg",
+      "written": true
+    },
+    {
+      "index": 6,
+      "time": 14.4,
+      "path": "D:/fuyao-ref-frames\\ref-06-14.40s.jpg",
+      "written": true
+    },
+    {
+      "index": 7,
+      "time": 18.07,
+      "path": "D:/fuyao-ref-frames\\ref-07-18.07s.jpg",
+      "written": true
+    }
+  ]
+}

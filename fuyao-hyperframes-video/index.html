@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>扶摇弱科人格画像 Demo</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      @font-face {
+        font-family: "Microsoft YaHei";
+        src: local("Microsoft YaHei");
+      }
+
+      html,
+      body {
+        margin: 0;
+        width: 1080px;
+        height: 1440px;
+        overflow: hidden;
+        background: #f9fafb;
+        font-family: "Microsoft YaHei", system-ui, Arial, sans-serif;
+      }
+
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1440px;
+        overflow: hidden;
+        background: #f9fafb;
+        color: #111827;
+      }
+
+      .scene {
+        position: absolute;
+        inset: 0;
+        width: 1080px;
+        height: 1440px;
+        overflow: hidden;
+      }
+
+      #scene-1 {
+        z-index: 1;
+        background: #f9fafb;
+      }
+
+      #scene-2,
+      #scene-3,
+      #scene-4,
+      #scene-5 {
+        opacity: 0;
+      }
+
+      #scene-2 {
+        z-index: 2;
+        background: #f9fafb;
+      }
+
+      #scene-3 {
+        z-index: 3;
+        background: #111827;
+        color: #ffffff;
+      }
+
+      #scene-4 {
+        z-index: 4;
+        background: #f9fafb;
+      }
+
+      #scene-5 {
+        z-index: 5;
+        background: #f9fafb;
+      }
+
+      .bg-soft {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at 20% 18%, rgba(99, 102, 241, 0.18), rgba(99, 102, 241, 0) 30%),
+          radial-gradient(circle at 84% 78%, rgba(236, 72, 153, 0.18), rgba(236, 72, 153, 0) 34%),
+          linear-gradient(180deg, #eef2ff 0%, #ffffff 62%, #f9fafb 100%);
+      }
+
+      .bg-grain {
+        position: absolute;
+        inset: 0;
+        opacity: 0.18;
+        background-image:
+          linear-gradient(rgba(17, 24, 39, 0.04) 1px, rgba(17, 24, 39, 0) 1px),
+          linear-gradient(90deg, rgba(17, 24, 39, 0.03) 1px, rgba(17, 24, 39, 0) 1px);
+        background-size: 42px 42px;
+      }
+
+      .phone-stage {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        perspective: 1400px;
+      }
+
+      .phone {
+        width: 610px;
+        height: 1180px;
+        border-radius: 78px;
+        padding: 22px;
+        background: linear-gradient(145deg, #111827, #374151 44%, #ffffff 48%, #111827 56%);
+        box-shadow: 0 42px 100px rgba(17, 24, 39, 0.28);
+        position: relative;
+        will-change: transform;
+      }
+
+      .phone::before {
+        content: "";
+        position: absolute;
+        top: 34px;
+        left: 226px;
+        width: 160px;
+        height: 42px;
+        border-radius: 999px;
+        background: #05070b;
+        z-index: 10;
+      }
+
+      .phone-screen {
+        width: 100%;
+        height: 100%;
+        border-radius: 58px;
+        background: #ffffff;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .home-ui,
+      .flow-ui,
+      .result-ui,
+      .final-ui {
+        position: absolute;
+        inset: 0;
+        padding: 112px 54px 62px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        align-self: flex-start;
+        padding: 10px 18px;
+        border-radius: 999px;
+        border: 1px solid #c7d2fe;
+        background: rgba(255, 255, 255, 0.84);
+        color: #6366f1;
+        font-size: 22px;
+        font-weight: 700;
+        box-shadow: 0 8px 28px rgba(99, 102, 241, 0.16);
+      }
+
+      .dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #6366f1;
+        box-shadow: 0 0 0 9px rgba(99, 102, 241, 0.14);
+      }
+
+      .hero-title {
+        margin: 118px 0 28px;
+        font-size: 66px;
+        line-height: 0.98;
+        letter-spacing: 0;
+        font-weight: 900;
+      }
+
+      .gradient-text {
+        color: #6366f1;
+        background: linear-gradient(90deg, #6366f1, #8b5cf6 48%, #ec4899);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: rgba(0, 0, 0, 0);
+      }
+
+      .hero-copy {
+        max-width: 470px;
+        color: #4b5563;
+        font-size: 25px;
+        line-height: 1.46;
+        margin: 0 0 44px;
+      }
+
+      .cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 410px;
+        min-height: 78px;
+        border-radius: 24px;
+        color: #111827;
+        background: #c7d2fe;
+        font-size: 27px;
+        font-weight: 900;
+        box-shadow: 0 22px 48px rgba(99, 102, 241, 0.32);
+      }
+
+      .stats-row {
+        margin-top: auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+
+      .stat {
+        padding: 24px 10px;
+        border-radius: 24px;
+        background: #ffffff;
+        border: 1px solid #e0e7ff;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(17, 24, 39, 0.08);
+      }
+
+      .stat strong {
+        display: block;
+        color: #8b5cf6;
+        font-family: Consolas, monospace;
+        font-size: 38px;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .stat span {
+        display: block;
+        margin-top: 10px;
+        color: #6b7280;
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      .sticker {
+        position: absolute;
+        min-width: 116px;
+        padding: 16px 20px;
+        border-radius: 24px;
+        background: #ffffff;
+        color: #111827;
+        font-size: 24px;
+        font-weight: 900;
+        box-shadow: 0 18px 48px rgba(17, 24, 39, 0.14);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        will-change: transform;
+      }
+
+      .sticker small {
+        color: #6b7280;
+        font-size: 15px;
+        font-family: Consolas, monospace;
+      }
+
+      .s1-ruler {
+        top: 170px;
+        left: 76px;
+      }
+
+      .s1-calc {
+        top: 260px;
+        right: 82px;
+      }
+
+      .s1-bars {
+        bottom: 260px;
+        left: 80px;
+      }
+
+      .s1-x {
+        bottom: 190px;
+        right: 120px;
+        color: #8b5cf6;
+      }
+
+      .flow-ui {
+        gap: 24px;
+        padding-top: 96px;
+      }
+
+      .screen-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #6b7280;
+        font-size: 22px;
+        font-weight: 700;
+      }
+
+      .progress {
+        height: 12px;
+        border-radius: 99px;
+        background: #e5e7eb;
+        overflow: hidden;
+        margin: 18px 0 34px;
+      }
+
+      .progress-fill {
+        width: 16%;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #6366f1, #8b5cf6);
+      }
+
+      .form-card,
+      .question-card,
+      .result-card {
+        border-radius: 36px;
+        background: #ffffff;
+        border: 1px solid #e0e7ff;
+        box-shadow: 0 20px 54px rgba(17, 24, 39, 0.12);
+      }
+
+      .form-card {
+        padding: 34px;
+      }
+
+      .form-title {
+        font-size: 31px;
+        line-height: 1.18;
+        font-weight: 900;
+        margin-bottom: 28px;
+      }
+
+      .field {
+        height: 74px;
+        border-radius: 20px;
+        border: 2px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px;
+        margin-top: 18px;
+        color: #111827;
+        font-size: 23px;
+        font-weight: 800;
+      }
+
+      .field span {
+        color: #6b7280;
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      .question-card {
+        padding: 32px;
+        margin-top: 10px;
+      }
+
+      .question-label {
+        color: #6366f1;
+        font-size: 22px;
+        font-weight: 900;
+        margin-bottom: 22px;
+      }
+
+      .question-title {
+        color: #111827;
+        font-size: 31px;
+        line-height: 1.26;
+        font-weight: 900;
+        margin-bottom: 22px;
+      }
+
+      .option {
+        min-height: 72px;
+        border-radius: 22px;
+        border: 2px solid #e5e7eb;
+        margin-top: 14px;
+        padding: 16px 18px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        color: #374151;
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 1.25;
+      }
+
+      .option b {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f3f4f6;
+        color: #6b7280;
+        flex: 0 0 auto;
+      }
+
+      .option.selected {
+        border-color: #6366f1;
+        background: #eef2ff;
+        color: #4338ca;
+        box-shadow: 0 12px 28px rgba(99, 102, 241, 0.14);
+      }
+
+      .option.selected b {
+        background: #c7d2fe;
+        color: #111827;
+      }
+
+      .progress-dots {
+        display: flex;
+        gap: 9px;
+        margin: auto auto 0;
+        justify-content: center;
+      }
+
+      .progress-dots i {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        display: block;
+        background: #d1d5db;
+      }
+
+      .progress-dots i:first-child {
+        width: 34px;
+        border-radius: 99px;
+        background: #6366f1;
+      }
+
+      .callout {
+        position: absolute;
+        border-radius: 24px;
+        padding: 18px 22px;
+        background: #ffffff;
+        border: 1px solid #e0e7ff;
+        color: #111827;
+        font-weight: 900;
+        font-size: 25px;
+        box-shadow: 0 18px 42px rgba(17, 24, 39, 0.14);
+        will-change: transform;
+      }
+
+      .callout small {
+        display: block;
+        color: #4f46e5;
+        font-family: Consolas, monospace;
+        font-size: 18px;
+        margin-bottom: 4px;
+      }
+
+      .c-24 {
+        top: 170px;
+        right: 70px;
+      }
+
+      .c-3m {
+        bottom: 248px;
+        left: 56px;
+      }
+
+      .c-real {
+        bottom: 170px;
+        right: 84px;
+      }
+
+      .dark-glow {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at 52% 42%, rgba(139, 92, 246, 0.36), rgba(139, 92, 246, 0) 34%),
+          radial-gradient(circle at 50% 74%, rgba(236, 72, 153, 0.18), rgba(236, 72, 153, 0) 32%),
+          #111827;
+      }
+
+      .dark-phone {
+        background: linear-gradient(145deg, #030712, #374151 44%, #f9fafb 49%, #030712 58%);
+      }
+
+      .phone-screen.dark {
+        background: #111827;
+      }
+
+      .generating-shot,
+      .result-shot {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .scan-line {
+        position: absolute;
+        left: 92px;
+        right: 92px;
+        top: 680px;
+        height: 4px;
+        border-radius: 99px;
+        background: linear-gradient(90deg, rgba(99, 102, 241, 0), #8b5cf6, rgba(236, 72, 153, 0));
+        box-shadow: 0 0 32px rgba(139, 92, 246, 0.85);
+      }
+
+      .ring {
+        position: absolute;
+        top: 430px;
+        left: 204px;
+        width: 164px;
+        height: 164px;
+        border-radius: 50%;
+        border: 4px solid rgba(139, 92, 246, 0.42);
+        box-shadow: 0 0 34px rgba(139, 92, 246, 0.5);
+      }
+
+      .ring::after {
+        content: "";
+        position: absolute;
+        inset: 20px;
+        border-radius: 50%;
+        border: 3px solid rgba(236, 72, 153, 0.44);
+      }
+
+      .chip-row {
+        position: absolute;
+        left: 56px;
+        right: 56px;
+        bottom: 168px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+
+      .chip {
+        border-radius: 18px;
+        padding: 16px 18px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #e0e7ff;
+        font-size: 18px;
+        font-weight: 800;
+        text-align: center;
+      }
+
+      .analyzer-title {
+        position: absolute;
+        top: 210px;
+        left: 72px;
+        right: 72px;
+        text-align: center;
+        font-size: 35px;
+        font-weight: 900;
+        line-height: 1.2;
+      }
+
+      .analyzer-sub {
+        position: absolute;
+        top: 310px;
+        left: 80px;
+        right: 80px;
+        color: #9ca3af;
+        text-align: center;
+        font-size: 21px;
+        line-height: 1.4;
+      }
+
+      .particle {
+        position: absolute;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: #a78bfa;
+        box-shadow: 0 0 20px rgba(167, 139, 250, 0.85);
+      }
+
+      .p1 { top: 390px; left: 148px; }
+      .p2 { top: 380px; right: 150px; background: #ec4899; }
+      .p3 { top: 610px; left: 152px; background: #6366f1; }
+      .p4 { top: 612px; right: 134px; }
+
+      .result-phone {
+        width: 646px;
+        height: 1210px;
+      }
+
+      .result-shot {
+        object-position: top center;
+      }
+
+      .result-pop {
+        position: absolute;
+        left: 64px;
+        right: 64px;
+        top: 160px;
+        padding: 28px 30px;
+        border-radius: 34px;
+        background: #ffffff;
+        border: 1px solid #e0e7ff;
+        box-shadow: 0 24px 70px rgba(17, 24, 39, 0.22);
+        display: grid;
+        grid-template-columns: 92px 1fr;
+        gap: 18px;
+        align-items: center;
+        z-index: 8;
+      }
+
+      .result-emoji {
+        width: 92px;
+        height: 92px;
+        border-radius: 28px;
+        background: rgba(245, 158, 11, 0.16);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 54px;
+      }
+
+      .result-pop small {
+        display: block;
+        color: #6b7280;
+        font-size: 18px;
+        font-weight: 800;
+      }
+
+      .result-pop strong {
+        display: block;
+        margin-top: 4px;
+        color: #8b5cf6;
+        font-size: 44px;
+        line-height: 1;
+        font-weight: 900;
+      }
+
+      .metric-stack {
+        position: absolute;
+        right: 52px;
+        bottom: 190px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        z-index: 8;
+      }
+
+      .metric {
+        width: 250px;
+        border-radius: 24px;
+        padding: 18px 20px;
+        background: #ffffff;
+        box-shadow: 0 16px 48px rgba(17, 24, 39, 0.16);
+        font-weight: 900;
+        color: #111827;
+        font-size: 23px;
+      }
+
+      .metric span {
+        display: block;
+        color: #92400e;
+        font-family: Consolas, monospace;
+        font-size: 18px;
+        margin-bottom: 6px;
+      }
+
+      .radar-card {
+        position: absolute;
+        left: 54px;
+        bottom: 214px;
+        width: 270px;
+        height: 220px;
+        border-radius: 30px;
+        background: #ffffff;
+        box-shadow: 0 18px 52px rgba(17, 24, 39, 0.14);
+        padding: 22px;
+        z-index: 8;
+      }
+
+      .radar-card p {
+        margin: 0 0 8px;
+        color: #4f46e5;
+        font-size: 18px;
+        font-weight: 900;
+      }
+
+      .radar {
+        width: 180px;
+        height: 142px;
+        display: block;
+        margin: 8px auto 0;
+      }
+
+      .radar path,
+      .radar polygon {
+        vector-effect: non-scaling-stroke;
+      }
+
+      .final-layout {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 90px;
+      }
+
+      .final-card {
+        width: 840px;
+        min-height: 900px;
+        border-radius: 54px;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid #e0e7ff;
+        box-shadow: 0 32px 90px rgba(17, 24, 39, 0.15);
+        padding: 74px 68px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .final-card::before {
+        content: "";
+        position: absolute;
+        width: 720px;
+        height: 720px;
+        border-radius: 50%;
+        left: 60px;
+        top: -240px;
+        background: radial-gradient(circle, rgba(139, 92, 246, 0.24), rgba(139, 92, 246, 0) 65%);
+      }
+
+      .brand {
+        position: relative;
+        z-index: 1;
+        color: #6366f1;
+        font-size: 28px;
+        font-weight: 900;
+        margin-bottom: 80px;
+      }
+
+      .final-title {
+        position: relative;
+        z-index: 1;
+        font-size: 78px;
+        line-height: 1.04;
+        font-weight: 900;
+        margin: 0 0 34px;
+      }
+
+      .final-copy {
+        position: relative;
+        z-index: 1;
+        margin: 0 auto 54px;
+        color: #4b5563;
+        font-size: 27px;
+        line-height: 1.45;
+        max-width: 620px;
+      }
+
+      .final-stats {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        margin-bottom: 54px;
+      }
+
+      .final-stats div {
+        border-radius: 24px;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        padding: 22px 10px;
+      }
+
+      .final-stats strong {
+        display: block;
+        color: #8b5cf6;
+        font-family: Consolas, monospace;
+        font-size: 36px;
+      }
+
+      .final-stats span {
+        display: block;
+        color: #6b7280;
+        font-size: 16px;
+        font-weight: 800;
+      }
+
+      .flash {
+        position: absolute;
+        inset: 0;
+        z-index: 20;
+        pointer-events: none;
+        background: #ffffff;
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="fuyao-demo"
+      data-width="1080"
+      data-height="1440"
+      data-start="0"
+      data-duration="18.8"
+    >
+      <section id="scene-1" class="scene">
+        <div class="bg-soft"></div>
+        <div class="bg-grain"></div>
+        <div class="sticker s1-ruler">📐</div>
+        <div class="sticker s1-calc">🧮</div>
+        <div class="sticker s1-bars">📊</div>
+        <div class="sticker s1-x">×</div>
+        <div class="phone-stage">
+          <div class="phone phone-1">
+            <div class="phone-screen">
+              <div class="home-ui">
+                <div class="pill"><span class="dot"></span> 扶摇学习诊断 · AI驱动</div>
+                <h1 class="hero-title">
+                  <span class="gradient-text">测出你的</span>
+                  <span class="gradient-text">弱科人格画像</span>
+                </h1>
+                <p class="hero-copy">你不是简单“数学差”，而是有一个具体的失分机制正在拖慢你。</p>
+                <div class="cta">开始测试 · 免费生成画像</div>
+                <div class="stats-row">
+                  <div class="stat"><strong>8</strong><span>人格类型</span></div>
+                  <div class="stat"><strong>3min</strong><span>快速测评</span></div>
+                  <div class="stat"><strong>8</strong><span>诊断维度</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="scene-2" class="scene" data-layout-allow-overlap>
+        <div class="bg-soft"></div>
+        <div class="bg-grain"></div>
+        <div class="callout c-24"><small>24</small>场景题</div>
+        <div class="callout c-3m"><small>3min</small>快速完成</div>
+        <div class="callout c-real"><small>REAL</small>真实习惯</div>
+        <div class="phone-stage">
+          <div class="phone phone-2">
+            <div class="phone-screen">
+              <div class="flow-ui">
+                <div class="screen-top"><span>退出测试</span><span>已答 0 / 24 题</span></div>
+                <div class="progress"><div class="progress-fill"></div></div>
+                <div class="form-card">
+                  <div class="form-title">开始测试前，先告诉我们你的基本情况</div>
+                  <div class="field"><span>年级</span>高一</div>
+                  <div class="field"><span>薄弱科目</span>数学</div>
+                  <div class="field"><span>目标分数</span>120</div>
+                </div>
+                <div class="question-card">
+                  <div class="question-label">第 1 / 24 题</div>
+                  <div class="question-title">做综合题时，你通常第一步会做什么？</div>
+                  <div class="option selected"><b>B</b><span>先圈出题目里的范围、单位、限制词</span></div>
+                  <div class="option"><b>C</b><span>先看自己会不会套公式</span></div>
+                  <div class="option"><b>D</b><span>看题目难不难再决定</span></div>
+                </div>
+                <div class="progress-dots">
+                  <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="scene-3" class="scene" data-layout-allow-overlap>
+        <div class="dark-glow"></div>
+        <div class="phone-stage">
+          <div class="phone dark-phone phone-3">
+            <div class="phone-screen dark">
+              <img class="generating-shot" src="product-screens/generating-large.png" alt="" />
+              <div class="analyzer-title">正在分析失分模式</div>
+              <div class="analyzer-sub">匹配弱科人格 · 生成能力画像 · 定位优先训练项</div>
+              <div class="ring"></div>
+              <div class="scan-line"></div>
+              <div class="particle p1"></div>
+              <div class="particle p2"></div>
+              <div class="particle p3"></div>
+              <div class="particle p4"></div>
+              <div class="chip-row">
+                <div class="chip">条件识别</div>
+                <div class="chip">公式唤醒</div>
+                <div class="chip">计算稳定</div>
+                <div class="chip">复盘转化</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="scene-4" class="scene" data-layout-allow-overlap>
+        <div class="bg-soft"></div>
+        <div class="bg-grain"></div>
+        <div class="phone-stage">
+          <div class="phone result-phone phone-4">
+            <div class="phone-screen">
+              <img class="result-shot" src="product-screens/result-large.png" alt="" data-layout-allow-overflow />
+              <div class="result-pop">
+                <div class="result-emoji">🚗</div>
+                <div>
+                  <small>你的弱科人格</small>
+                  <strong>计算翻车型</strong>
+                </div>
+              </div>
+              <div class="radar-card">
+                <p>八维能力画像</p>
+                <svg class="radar" viewBox="0 0 200 160">
+                  <path d="M100 10 L178 54 L162 136 L38 136 L22 54 Z" fill="none" stroke="#e5e7eb" stroke-width="3" />
+                  <path d="M100 36 L145 66 L132 115 L62 122 L48 69 Z" fill="rgba(99,102,241,0.24)" stroke="#6366F1" stroke-width="5" />
+                  <circle cx="100" cy="36" r="5" fill="#6366F1" />
+                  <circle cx="145" cy="66" r="5" fill="#8B5CF6" />
+                  <circle cx="132" cy="115" r="5" fill="#EC4899" />
+                  <circle cx="62" cy="122" r="5" fill="#F59E0B" />
+                  <circle cx="48" cy="69" r="5" fill="#6366F1" />
+                </svg>
+              </div>
+              <div class="metric-stack">
+                <div class="metric"><span>01</span>思路不差</div>
+                <div class="metric"><span>02</span>细节断链</div>
+                <div class="metric"><span>03</span>7天训练</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="scene-5" class="scene" data-layout-allow-overlap>
+        <div class="bg-soft"></div>
+        <div class="bg-grain"></div>
+        <div class="final-layout">
+          <div class="final-card">
+            <div class="brand">扶摇弱科人格画像</div>
+            <h2 class="final-title">
+              <span class="gradient-text">3分钟，</span>
+              <span>看清失分机制</span>
+            </h2>
+            <p class="final-copy">不是凭感觉说“粗心”，而是用真实测评定位具体的丢分环节。</p>
+            <div class="final-stats">
+              <div><strong>24</strong><span>场景题</span></div>
+              <div><strong>8</strong><span>诊断维度</span></div>
+              <div><strong>7天</strong><span>提升计划</span></div>
+            </div>
+            <div class="cta">开始测试 · 免费生成画像</div>
+          </div>
+        </div>
+      </section>
+
+      <div id="flash" class="flash"></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+
+      function zoomTransition(oldScene, newScene, t) {
+        tl.to(oldScene, { scale: 2.2, opacity: 0, filter: "blur(10px)", duration: 0.42, ease: "power3.in" }, t);
+        tl.fromTo(newScene, { scale: 0.62, opacity: 0, filter: "blur(12px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.58, ease: "power3.out" }, t + 0.18);
+      }
+
+      function directionalBlur(oldScene, newScene, t) {
+        tl.to(oldScene, { x: -240, skewX: -5, filter: "blur(12px)", opacity: 0, duration: 0.4, ease: "power3.in" }, t);
+        tl.fromTo(newScene, { x: 240, skewX: 5, filter: "blur(12px)", opacity: 0 }, { x: 0, skewX: 0, filter: "blur(0px)", opacity: 1, duration: 0.46, ease: "power3.out" }, t + 0.18);
+      }
+
+      function flashTransition(oldScene, newScene, t) {
+        tl.to(oldScene, { filter: "brightness(2.6)", scale: 1.05, duration: 0.24, ease: "power2.in" }, t);
+        tl.to("#flash", { opacity: 1, duration: 0.18, ease: "power2.in" }, t + 0.16);
+        tl.set(oldScene, { opacity: 0, filter: "brightness(1)", scale: 1 }, t + 0.38);
+        tl.set(newScene, { opacity: 1 }, t + 0.38);
+        tl.to("#flash", { opacity: 0, duration: 0.36, ease: "power2.out" }, t + 0.38);
+      }
+
+      // Scene 1
+      tl.fromTo(".phone-1", { x: 230, y: 40, rotationY: -22, rotationZ: 7, scale: 0.72, opacity: 0 }, { x: 0, y: 0, rotationY: -8, rotationZ: -2, scale: 1, opacity: 1, duration: 0.78, ease: "expo.out" }, 0.16);
+      tl.fromTo(".pill", { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.42, ease: "power2.out" }, 0.42);
+      tl.fromTo(".hero-title span", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.54, stagger: 0.12, ease: "back.out(1.35)" }, 0.55);
+      tl.fromTo(".hero-copy", { y: 34, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 0.96);
+      tl.fromTo("#scene-1 .cta", { scale: 0.86, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.42, ease: "back.out(1.7)" }, 1.2);
+      tl.fromTo("#scene-1 .stat", { y: 44, opacity: 0, scale: 0.92 }, { y: 0, opacity: 1, scale: 1, duration: 0.5, stagger: 0.08, ease: "power2.out" }, 1.45);
+      tl.fromTo("#scene-1 .sticker", { scale: 0.55, opacity: 0, rotation: -16 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.42, stagger: 0.08, ease: "back.out(1.8)" }, 0.36);
+      tl.to(".s1-ruler", { y: -18, rotation: 6, duration: 1.4, repeat: 2, yoyo: true, ease: "sine.inOut" }, 0.9);
+      tl.to(".s1-calc", { y: 14, rotation: -5, duration: 1.15, repeat: 2, yoyo: true, ease: "sine.inOut" }, 1.0);
+      tl.to(".s1-bars", { y: -16, rotation: -4, duration: 1.25, repeat: 2, yoyo: true, ease: "sine.inOut" }, 1.1);
+      tl.to(".s1-x", { y: 18, rotation: 10, duration: 1.3, repeat: 2, yoyo: true, ease: "sine.inOut" }, 1.0);
+
+      zoomTransition("#scene-1", "#scene-2", 3.38);
+
+      // Scene 2
+      tl.fromTo(".phone-2", { x: -150, rotationY: 18, rotationZ: -4, scale: 0.86, opacity: 0 }, { x: 0, rotationY: 9, rotationZ: 2, scale: 1, opacity: 1, duration: 0.58, ease: "expo.out" }, 3.72);
+      tl.fromTo(".screen-top", { y: -30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.36, ease: "power2.out" }, 3.9);
+      tl.fromTo(".progress-fill", { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: 0.65, ease: "power2.out" }, 4.05);
+      tl.fromTo(".form-card", { y: 74, opacity: 0, scale: 0.95 }, { y: 0, opacity: 1, scale: 1, duration: 0.54, ease: "power3.out" }, 4.0);
+      tl.fromTo(".field", { x: 48, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, stagger: 0.08, ease: "power2.out" }, 4.28);
+      tl.fromTo(".question-card", { y: 92, opacity: 0, scale: 0.94 }, { y: 0, opacity: 1, scale: 1, duration: 0.58, ease: "back.out(1.2)" }, 4.86);
+      tl.fromTo(".option", { x: 54, opacity: 0 }, { x: 0, opacity: 1, duration: 0.34, stagger: 0.08, ease: "power3.out" }, 5.24);
+      tl.fromTo(".progress-dots i", { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25, stagger: 0.025, ease: "back.out(1.7)" }, 5.72);
+      tl.fromTo("#scene-2 .callout", { y: 40, opacity: 0, scale: 0.75, rotation: -8 }, { y: 0, opacity: 1, scale: 1, rotation: 0, duration: 0.4, stagger: 0.1, ease: "back.out(1.65)" }, 4.35);
+      tl.to(".c-24", { y: -12, rotation: -3, duration: 1.0, repeat: 2, yoyo: true, ease: "sine.inOut" }, 5.2);
+      tl.to(".c-3m", { y: 14, rotation: 4, duration: 1.2, repeat: 2, yoyo: true, ease: "sine.inOut" }, 5.1);
+      tl.to(".c-real", { y: -10, rotation: 3, duration: 1.15, repeat: 2, yoyo: true, ease: "sine.inOut" }, 5.3);
+
+      directionalBlur("#scene-2", "#scene-3", 7.04);
+
+      // Scene 3
+      tl.fromTo(".phone-3", { y: 140, rotationX: 12, rotationY: -8, scale: 0.86, opacity: 0 }, { y: 0, rotationX: 0, rotationY: -3, scale: 1, opacity: 1, duration: 0.58, ease: "expo.out" }, 7.34);
+      tl.fromTo(".analyzer-title", { y: 32, opacity: 0 }, { y: 0, opacity: 1, duration: 0.44, ease: "power3.out" }, 7.52);
+      tl.fromTo(".analyzer-sub", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.42, ease: "sine.out" }, 7.78);
+      tl.fromTo(".ring", { scale: 0.5, opacity: 0, rotation: -90 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.55, ease: "back.out(1.5)" }, 7.7);
+      tl.to(".ring", { rotation: 220, duration: 2.38, ease: "none" }, 8.3);
+      tl.fromTo(".scan-line", { y: -140, opacity: 0 }, { y: 170, opacity: 1, duration: 1.25, ease: "power1.inOut" }, 8.05);
+      tl.to(".scan-line", { y: 330, opacity: 0.35, duration: 1.0, ease: "power1.inOut" }, 9.34);
+      tl.fromTo(".chip", { y: 32, opacity: 0 }, { y: 0, opacity: 1, duration: 0.34, stagger: 0.12, ease: "power2.out" }, 8.35);
+      tl.fromTo(".particle", { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.28, stagger: 0.08, ease: "back.out(1.8)" }, 7.95);
+      tl.to(".p1", { x: 18, y: -22, duration: 1.1, repeat: 2, yoyo: true, ease: "sine.inOut" }, 8.2);
+      tl.to(".p2", { x: -22, y: 18, duration: 1.25, repeat: 2, yoyo: true, ease: "sine.inOut" }, 8.15);
+      tl.to(".p3", { x: 24, y: 16, duration: 1.2, repeat: 2, yoyo: true, ease: "sine.inOut" }, 8.25);
+      tl.to(".p4", { x: -18, y: -20, duration: 1.05, repeat: 2, yoyo: true, ease: "sine.inOut" }, 8.3);
+
+      flashTransition("#scene-3", "#scene-4", 10.42);
+
+      // Scene 4
+      tl.fromTo(".phone-4", { x: 160, y: 30, rotationY: -16, rotationZ: 5, scale: 0.82, opacity: 0 }, { x: 0, y: 0, rotationY: -6, rotationZ: -1, scale: 1, opacity: 1, duration: 0.66, ease: "expo.out" }, 10.72);
+      tl.to(".result-shot", { scale: 1.035, duration: 4.1, ease: "none" }, 10.72);
+      tl.fromTo(".result-pop", { y: 70, scale: 0.72, opacity: 0, rotation: -5 }, { y: 0, scale: 1, opacity: 1, rotation: 0, duration: 0.54, ease: "back.out(1.7)" }, 11.15);
+      tl.fromTo(".radar-card", { x: -90, y: 60, opacity: 0, scale: 0.82 }, { x: 0, y: 0, opacity: 1, scale: 1, duration: 0.46, ease: "power3.out" }, 11.72);
+      tl.fromTo(".radar path:nth-child(2)", { strokeDasharray: 500, strokeDashoffset: 500, opacity: 0 }, { strokeDashoffset: 0, opacity: 1, duration: 0.72, ease: "power2.out" }, 12.02);
+      tl.fromTo(".metric", { x: 90, opacity: 0, scale: 0.86 }, { x: 0, opacity: 1, scale: 1, duration: 0.42, stagger: 0.12, ease: "back.out(1.4)" }, 12.12);
+      tl.to(".result-pop", { y: -10, duration: 1.1, repeat: 2, yoyo: true, ease: "sine.inOut" }, 12.2);
+      tl.to(".radar-card", { y: 10, duration: 1.2, repeat: 2, yoyo: true, ease: "sine.inOut" }, 12.4);
+      tl.to(".metric-stack", { y: -10, duration: 1.0, repeat: 2, yoyo: true, ease: "sine.inOut" }, 12.3);
+
+      tl.to("#scene-4", { filter: "blur(16px)", scale: 1.06, opacity: 0, duration: 0.48, ease: "power2.in" }, 14.86);
+      tl.fromTo("#scene-5", { filter: "blur(16px)", scale: 0.94, opacity: 0 }, { filter: "blur(0px)", scale: 1, opacity: 1, duration: 0.58, ease: "power2.out" }, 15.08);
+
+      // Scene 5
+      tl.fromTo(".final-card", { y: 72, opacity: 0, scale: 0.92 }, { y: 0, opacity: 1, scale: 1, duration: 0.62, ease: "expo.out" }, 15.28);
+      tl.fromTo(".brand", { y: 22, opacity: 0 }, { y: 0, opacity: 1, duration: 0.36, ease: "power2.out" }, 15.5);
+      tl.fromTo(".final-title span", { y: 54, opacity: 0 }, { y: 0, opacity: 1, duration: 0.48, stagger: 0.12, ease: "back.out(1.25)" }, 15.75);
+      tl.fromTo(".final-copy", { y: 26, opacity: 0 }, { y: 0, opacity: 1, duration: 0.42, ease: "sine.out" }, 16.28);
+      tl.fromTo(".final-stats div", { y: 30, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, duration: 0.38, stagger: 0.08, ease: "power3.out" }, 16.55);
+      tl.fromTo("#scene-5 .cta", { scale: 0.82, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(1.7)" }, 16.9);
+      tl.to("#scene-5 .cta", { scale: 1.035, duration: 0.32, repeat: 1, yoyo: true, ease: "sine.inOut" }, 17.45);
+      tl.to("#scene-5", { opacity: 0.92, duration: 0.42, ease: "sine.inOut" }, 18.3);
+
+      window.__timelines["fuyao-demo"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,165 @@
+{
+  "typography": [
+    {
+      "role": "display",
+      "fontFamily": "system-ui",
+      "fontSize": "72px",
+      "fontWeight": "800",
+      "lineHeight": "72px",
+      "letterSpacing": "-1.8px",
+      "color": "#111827",
+      "sampleText": "测出你的弱科人格画像"
+    },
+    {
+      "role": "heading",
+      "fontFamily": "system-ui",
+      "fontSize": "36px",
+      "fontWeight": "800",
+      "lineHeight": "40px",
+      "letterSpacing": "normal",
+      "color": "#FFFFFF",
+      "sampleText": "3分钟，发现你的弱科失分人格"
+    },
+    {
+      "role": "heading-2",
+      "fontFamily": "system-ui",
+      "fontSize": "30px",
+      "fontWeight": "700",
+      "lineHeight": "36px",
+      "letterSpacing": "normal",
+      "color": "#111827",
+      "sampleText": "什么是弱科人格？"
+    },
+    {
+      "role": "body",
+      "fontFamily": "system-ui",
+      "fontSize": "30px",
+      "fontWeight": "800",
+      "lineHeight": "36px",
+      "letterSpacing": "normal",
+      "color": "transparent",
+      "sampleText": "8"
+    },
+    {
+      "role": "heading-3",
+      "fontFamily": "system-ui",
+      "fontSize": "18px",
+      "fontWeight": "700",
+      "lineHeight": "24.75px",
+      "letterSpacing": "normal",
+      "color": "#111827",
+      "sampleText": "为什么补了课还是没提升？"
+    },
+    {
+      "role": "link",
+      "fontFamily": "system-ui",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "24px",
+      "letterSpacing": "normal",
+      "color": "#111827",
+      "sampleText": "开始测试 · 免费生成画像"
+    }
+  ],
+  "spacing": {
+    "observed": [
+      4,
+      8,
+      12,
+      16,
+      20,
+      24,
+      32,
+      40,
+      48,
+      64,
+      112
+    ],
+    "baseUnit": 8
+  },
+  "radius": [
+    "12px"
+  ],
+  "shadows": [
+    {
+      "value": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px",
+      "count": 2
+    }
+  ],
+  "buttons": [
+    {
+      "label": "开始测试 · 免费生成画像",
+      "background": "transparent",
+      "backgroundImage": "linear-gradient(to right, rgb(99, 102, 241), rgb(139, 92, 246))",
+      "backdropFilter": "",
+      "color": "#FFFFFF",
+      "padding": "16px 32px",
+      "borderRadius": "12px",
+      "border": "0px solid rgb(229, 231, 235)",
+      "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px",
+      "fontSize": "18px",
+      "fontWeight": "600",
+      "height": "60px"
+    },
+    {
+      "label": "开始测试",
+      "background": "#FFFFFF",
+      "backgroundImage": "linear-gradient(to right, rgb(99, 102, 241), rgb(139, 92, 246))",
+      "backdropFilter": "",
+      "color": "#FFFFFF",
+      "padding": "16px 32px",
+      "borderRadius": "12px",
+      "border": "0px solid rgb(229, 231, 235)",
+      "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px",
+      "fontSize": "18px",
+      "fontWeight": "600",
+      "height": "60px"
+    }
+  ],
+  "cards": [],
+  "nav": null,
+  "chips": [
+    {
+      "label": "扶摇学习诊断 · AI驱动",
+      "background": "#FFFFFF",
+      "color": "#4F46E5",
+      "padding": "6px 16px",
+      "borderRadius": "9999px",
+      "border": "1px solid rgb(199, 210, 254)",
+      "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+      "fontSize": "14px",
+      "fontWeight": "500",
+      "height": "34px"
+    }
+  ],
+  "statCells": [],
+  "tabs": [],
+  "backgrounds": [
+    {
+      "value": "linear-gradient(to right bottom, rgb(99, 102, 241), rgb(139, 92, 246), rgb(236, 72, 153))",
+      "area": 1448704
+    },
+    {
+      "value": "linear-gradient(rgb(238, 242, 255), rgb(255, 255, 255), rgba(255, 255, 255, 0))",
+      "area": 1824750
+    },
+    {
+      "value": "linear-gradient(rgb(255, 255, 255), rgba(238, 242, 255, 0.4))",
+      "area": 1151040
+    },
+    {
+      "value": "linear-gradient(to right, rgb(99, 102, 241), rgb(139, 92, 246), rgb(236, 72, 153))",
+      "area": 63883
+    }
+  ],
+  "glass": [
+    {
+      "backdropFilter": "blur(8px)",
+      "background": "rgba(255, 255, 255, 0.8)",
+      "border": "1px solid rgb(224, 231, 255)",
+      "borderRadius": "16px",
+      "boxShadow": "",
+      "area": 179872
+    }
+  ]
+}

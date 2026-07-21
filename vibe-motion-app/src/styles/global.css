@@ -1,0 +1,76 @@
+/* 扶摇 Remotion 全局样式 */
+
+@import url("@fontsource-variable/jetbrains-mono/index.css");
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "JetBrains Mono", "SF Pro Display", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 渐变文字效果 */
+.gradient-text {
+  background: linear-gradient(135deg, #625bff 0%, #f044a5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 柔和阴影 */
+.soft-shadow {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+/* 手机框架阴影 */
+.phone-shadow {
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.25);
+}
+
+/* 发光效果 */
+.glow {
+  box-shadow: 0 0 30px rgba(98, 91, 255, 0.4);
+}
+
+/* 呼吸动画 */
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.breathe {
+  animation: breathe 2s ease-in-out infinite;
+}
+
+/* 浮动动画 */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* 脉冲动画 */
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}

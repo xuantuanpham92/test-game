@@ -1,0 +1,1 @@
+export { FuyaoDemo } from "./FuyaoDemo";
