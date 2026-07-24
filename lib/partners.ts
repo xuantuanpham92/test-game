@@ -12,7 +12,7 @@ export const PARTNERS: Partner[] = [
   {
     name: "龙门文艺书社",
     label: "LITERATURE & ARTS",
-    address: "地址待补充",
+    address: "薛城区紫光园东门北140米",
     photo: null,
     icon: "orbit",
   },
