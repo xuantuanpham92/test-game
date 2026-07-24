@@ -12,7 +12,7 @@ export const PARTNERS: Partner[] = [
   {
     name: "青北书城",
     label: "CAMPUS BOOKSTORE",
-    address: "地址待补充",
+    address: "薛城区黄河路111号天穹·星朗苑",
     photo: null,
     icon: "spark",
   },
