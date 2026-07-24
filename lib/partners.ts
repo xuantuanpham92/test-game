@@ -12,7 +12,7 @@ export const PARTNERS: Partner[] = [
   {
     name: "九思教育",
     label: "EDUCATION SERVICES",
-    address: "地址待补充",
+    address: "薛城区文景嘉园北区17号楼109门市",
     photo: null,
     icon: "grid",
   },
