@@ -12,7 +12,7 @@ export const PARTNERS: Partner[] = [
   {
     name: "金泽涮烤场",
     label: "DINING & GATHERING",
-    address: "地址待补充",
+    address: "薛城区新城街道武夷山路东侧孵化园8厂房104室",
     photo: null,
     icon: "grid",
   },
