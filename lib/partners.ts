@@ -12,7 +12,7 @@ export const PARTNERS: Partner[] = [
   {
     name: "法律书屋",
     label: "LAW BOOKSTORE",
-    address: "地址待补充",
+    address: "薛城区武夷山路与深圳路交叉口南140米",
     photo: null,
     icon: "spark",
   },
