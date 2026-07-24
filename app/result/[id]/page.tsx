@@ -22,6 +22,7 @@ import { useToast } from "@/components/common/Toast";
 import { DIMENSIONS, type DimensionKey } from "@/lib/constants";
 import { parseDescriptionSections } from "@/lib/description";
 import { getPersonalityCardLine } from "@/lib/personality-card-copy";
+import { PARTNERS } from "@/lib/partners";
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -820,14 +821,37 @@ function SloganBanner() {
   );
 }
 
-/** Partners showcase section */
-function PartnersSection() {
-  const partners = [
-    { name: "xx书店", label: "EDUCATION INNOVATION", icon: "spark" },
-    { name: "学习成长伙伴", label: "LEARNING & GROWTH", icon: "orbit" },
-    { name: "技术共创伙伴", label: "TECHNOLOGY CO-CREATION", icon: "grid" },
-  ] as const;
+/** SVG icon helpers */
+function PartnerIcon({ icon }: { icon: "spark" | "orbit" | "grid" }) {
+  if (icon === "orbit") {
+    return (
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-6 w-6">
+        <circle cx="12" cy="12" r="2.5" fill="currentColor" />
+        <ellipse cx="12" cy="12" rx="9" ry="4.5" stroke="currentColor" strokeWidth="1.5" transform="rotate(-30 12 12)" />
+        <ellipse cx="12" cy="12" rx="9" ry="4.5" stroke="currentColor" strokeWidth="1.5" transform="rotate(30 12 12)" />
+      </svg>
+    );
+  }
+  if (icon === "grid") {
+    return (
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-6 w-6">
+        <rect x="4" y="4" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
+        <rect x="14" y="4" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
+        <rect x="4" y="14" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
+        <path d="M15 17h5M17.5 14.5v5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      </svg>
+    );
+  }
+  /* spark */
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-6 w-6">
+      <path d="M12 2l1.9 6.1L20 10l-6.1 1.9L12 18l-1.9-6.1L4 10l6.1-1.9L12 2z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
+/** Partners showcase section — renders data from lib/partners.ts */
+function PartnersSection() {
   return (
     <motion.section
       className="max-w-5xl mx-auto px-4 py-10"
@@ -858,12 +882,12 @@ function PartnersSection() {
               与优秀伙伴，共赴成长
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-indigo-100/80">
-              连接教育、学习与技术的创新力量，为每一位学生创造更好的成长体验。
+              连接教育、学习与生活的创新力量，为每一位学生创造更好的成长体验。
             </p>
           </motion.div>
 
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-            {partners.map((partner, index) => (
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {PARTNERS.map((partner, index) => (
               <motion.div
                 key={partner.name}
                 variants={fadeUp}
@@ -873,36 +897,37 @@ function PartnersSection() {
                 <div className="pointer-events-none absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent" />
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/20 via-white/[0.04] to-transparent opacity-70 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="pointer-events-none absolute -bottom-10 -right-8 h-24 w-24 rounded-full bg-violet-200/15 blur-2xl transition-transform duration-500 group-hover:scale-150" />
-                <div className="relative flex items-center gap-4">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/35 bg-white/10 text-white shadow-[0_8px_18px_rgba(10,8,53,0.25),inset_0_1px_0_rgba(255,255,255,0.28)]">
-                    {partner.icon === "spark" && (
-                      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-6 w-6">
-                        <path d="M12 2l1.9 6.1L20 10l-6.1 1.9L12 18l-1.9-6.1L4 10l6.1-1.9L12 2z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
-                      </svg>
-                    )}
-                    {partner.icon === "orbit" && (
-                      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-6 w-6">
-                        <circle cx="12" cy="12" r="2.5" fill="currentColor" />
-                        <ellipse cx="12" cy="12" rx="9" ry="4.5" stroke="currentColor" strokeWidth="1.5" transform="rotate(-30 12 12)" />
-                        <ellipse cx="12" cy="12" rx="9" ry="4.5" stroke="currentColor" strokeWidth="1.5" transform="rotate(30 12 12)" />
-                      </svg>
-                    )}
-                    {partner.icon === "grid" && (
-                      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-6 w-6">
-                        <rect x="4" y="4" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
-                        <rect x="14" y="4" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
-                        <rect x="4" y="14" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
-                        <path d="M15 17h5M17.5 14.5v5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                      </svg>
-                    )}
+                {partner.photo ? (
+                  <div className="relative flex flex-col gap-3">
+                    <div className="w-full aspect-[3/2] rounded-xl overflow-hidden border border-white/20">
+                      <img src={partner.photo} alt={partner.name} className="w-full h-full object-cover" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-white">{partner.name}</p>
+                      <p className="mt-0.5 text-[10px] font-semibold tracking-[0.12em] text-indigo-100/65">
+                        {partner.label}
+                      </p>
+                      <p className="mt-1.5 text-[11px] text-indigo-200/70 leading-relaxed">
+                        📍 {partner.address}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-bold text-white">{partner.name}</p>
-                    <p className="mt-1 text-[10px] font-semibold tracking-[0.12em] text-indigo-100/65">
-                      {partner.label}
-                    </p>
+                ) : (
+                  <div className="relative flex items-center gap-4">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/35 bg-white/10 text-white shadow-[0_8px_18px_rgba(10,8,53,0.25),inset_0_1px_0_rgba(255,255,255,0.28)]">
+                      <PartnerIcon icon={partner.icon} />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-white">{partner.name}</p>
+                      <p className="mt-1 text-[10px] font-semibold tracking-[0.12em] text-indigo-100/65">
+                        {partner.label}
+                      </p>
+                      <p className="mt-1.5 text-[11px] text-indigo-200/70 leading-relaxed">
+                        📍 {partner.address}
+                      </p>
+                    </div>
                   </div>
-                </div>
+                )}
               </motion.div>
             ))}
           </div>
