@@ -12,7 +12,7 @@ export const PARTNERS: Partner[] = [
   {
     name: "铭宇文体超市",
     label: "STATIONERY & SPORTS",
-    address: "地址待补充",
+    address: "薛城区永兴路与泰山中路交叉口东260米",
     photo: null,
     icon: "orbit",
   },
