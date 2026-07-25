@@ -897,23 +897,7 @@ function PartnersSection() {
                 <div className="pointer-events-none absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent" />
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/20 via-white/[0.04] to-transparent opacity-70 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="pointer-events-none absolute -bottom-10 -right-8 h-24 w-24 rounded-full bg-violet-200/15 blur-2xl transition-transform duration-500 group-hover:scale-150" />
-                {partner.photo ? (
-                  <div className="relative flex flex-col gap-3">
-                    <div className="w-full aspect-[3/2] rounded-xl overflow-hidden border border-white/20">
-                      <img src={partner.photo} alt={partner.name} className="w-full h-full object-cover" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold text-white">{partner.name}</p>
-                      <p className="mt-0.5 text-[10px] font-semibold tracking-[0.12em] text-indigo-100/65">
-                        {partner.label}
-                      </p>
-                      <p className="mt-1.5 text-[11px] text-indigo-200/70 leading-relaxed">
-                        📍 {partner.address}
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="relative flex items-center gap-4">
+                <div className="relative flex items-center gap-4">
                     <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/35 bg-white/10 text-white shadow-[0_8px_18px_rgba(10,8,53,0.25),inset_0_1px_0_rgba(255,255,255,0.28)]">
                       <PartnerIcon icon={partner.icon} />
                     </div>
@@ -927,7 +911,6 @@ function PartnersSection() {
                       </p>
                     </div>
                   </div>
-                )}
               </motion.div>
             ))}
           </div>
