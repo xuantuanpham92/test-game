@@ -2,8 +2,6 @@
   name: string;
   label: string;
   address: string;
-  /** 门头照片路径，放在 public/partners/ 目录下 */
-  photo: string | null;
   icon: "spark" | "orbit" | "grid";
 }
 
@@ -13,7 +11,6 @@ export const PARTNERS: Partner[] = [
     name: "铭宇文体超市",
     label: "STATIONERY & SPORTS",
     address: "薛城区永兴路与泰山中路交叉口东260米",
-    photo: null,
     icon: "orbit",
   },
 ];
