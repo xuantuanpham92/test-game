@@ -2,8 +2,6 @@
   name: string;
   label: string;
   address: string;
-  /** 门头照片路径，放在 public/partners/ 目录下 */
-  photo: string | null;
   icon: "spark" | "orbit" | "grid";
 }
 
@@ -13,7 +11,6 @@ export const PARTNERS: Partner[] = [
     name: "想象力智能学业规划",
     label: "ACADEMIC PLANNING",
     address: "薛城区-中和路中和嘉园-东区",
-    photo: null,
     icon: "spark",
   },
 ];
