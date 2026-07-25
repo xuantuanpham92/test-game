@@ -11,6 +11,10 @@ test("renders the partners section below the personality card", () => {
   assert.match(pageSource, /displayedPartners\.map/);
   assert.match(pageSource, /partner\.address/);
   assert.match(pageSource, /grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4/);
+  assert.match(
+    pageSource,
+    /activePartner\s*\?\s*"mt-8 grid grid-cols-1 gap-4 mx-auto max-w-sm"/
+  );
   assert.match(pageSource, /bg-white\/\[0\.07\]/);
   assert.match(pageSource, /backdrop-blur-xl/);
   assert.match(pageSource, /hover:-translate-y-2/);

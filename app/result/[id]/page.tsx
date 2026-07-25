@@ -897,9 +897,11 @@ function PartnersSection() {
           </motion.div>
 
           <div
-            className={`mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 ${
-              activePartner ? "mx-auto max-w-sm" : ""
-            }`}
+            className={
+              activePartner
+                ? "mt-8 grid grid-cols-1 gap-4 mx-auto max-w-sm"
+                : "mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
+            }
           >
             {displayedPartners.map((partner, index) => (
               <motion.div
