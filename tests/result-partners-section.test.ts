@@ -7,10 +7,10 @@ test("renders the partners section below the personality card", () => {
 
   assert.match(pageSource, /function PartnersSection\(/);
   assert.match(pageSource, /与优秀伙伴，共赴成长/);
-  assert.match(pageSource, /xx书店/);
-  assert.match(pageSource, /学习成长伙伴/);
-  assert.match(pageSource, /技术共创伙伴/);
-  assert.match(pageSource, /grid-cols-1 md:grid-cols-3/);
+  assert.match(pageSource, /getPartnerFromHostname/);
+  assert.match(pageSource, /displayedPartners\.map/);
+  assert.match(pageSource, /partner\.address/);
+  assert.match(pageSource, /grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4/);
   assert.match(pageSource, /bg-white\/\[0\.07\]/);
   assert.match(pageSource, /backdrop-blur-xl/);
   assert.match(pageSource, /hover:-translate-y-2/);

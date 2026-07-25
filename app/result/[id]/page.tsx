@@ -22,7 +22,7 @@ import { useToast } from "@/components/common/Toast";
 import { DIMENSIONS, type DimensionKey } from "@/lib/constants";
 import { parseDescriptionSections } from "@/lib/description";
 import { getPersonalityCardLine } from "@/lib/personality-card-copy";
-import { PARTNERS } from "@/lib/partners";
+import { getPartnerFromHostname, PARTNERS, type Partner } from "@/lib/partners";
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -852,6 +852,14 @@ function PartnerIcon({ icon }: { icon: "spark" | "orbit" | "grid" }) {
 
 /** Partners showcase section — renders data from lib/partners.ts */
 function PartnersSection() {
+  const [activePartner, setActivePartner] = useState<Partner | null>(null);
+
+  useEffect(() => {
+    setActivePartner(getPartnerFromHostname(window.location.hostname));
+  }, []);
+
+  const displayedPartners = activePartner ? [activePartner] : PARTNERS;
+
   return (
     <motion.section
       className="max-w-5xl mx-auto px-4 py-10"
@@ -879,15 +887,21 @@ function PartnersSection() {
               PARTNERS
             </p>
             <h2 className="mt-3 text-2xl font-extrabold text-white md:text-3xl">
-              与优秀伙伴，共赴成长
+              {activePartner ? `${activePartner.name} × 扶摇` : "与优秀伙伴，共赴成长"}
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-indigo-100/80">
-              连接教育、学习与生活的创新力量，为每一位学生创造更好的成长体验。
+              {activePartner
+                ? `欢迎来到 ${activePartner.name} 的专属测评入口。让我们一起看见学习的更多可能。`
+                : "连接教育、学习与生活的创新力量，为每一位学生创造更好的成长体验。"}
             </p>
           </motion.div>
 
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {PARTNERS.map((partner, index) => (
+          <div
+            className={`mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 ${
+              activePartner ? "mx-auto max-w-sm" : ""
+            }`}
+          >
+            {displayedPartners.map((partner, index) => (
               <motion.div
                 key={partner.name}
                 variants={fadeUp}
