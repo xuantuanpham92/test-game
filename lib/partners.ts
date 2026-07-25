@@ -2,8 +2,6 @@
   name: string;
   label: string;
   address: string;
-  /** 门头照片路径，放在 public/partners/ 目录下 */
-  photo: string | null;
   icon: "spark" | "orbit" | "grid";
 }
 
@@ -13,7 +11,6 @@ export const PARTNERS: Partner[] = [
     name: "龙门文艺书社",
     label: "LITERATURE & ARTS",
     address: "薛城区紫光园东门北140米",
-    photo: null,
     icon: "orbit",
   },
 ];
